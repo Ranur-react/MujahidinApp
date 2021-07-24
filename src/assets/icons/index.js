@@ -14,7 +14,8 @@ import IconBack from './iconBack.svg';
 import IconData from './iconData.svg';
 import LogoMasjidGreen from './logoMasjidGreen.svg';
 import IconMasjid from './iconMasjid.svg';
+import LogoMujahidin from './mujahidinLogo.svg';
 
 export {IconHome, IconHomeAktif, IconTambah, IconTambahAktif, IconUser,
         IconUserAktif, LogoMasjid, LogoBSI, IconDataUser, IconInputData, IconLaporan,
-        IconBack, IconData, IconLaporanV2, LogoMasjidGreen, IconMasjid}
+        IconBack, IconData, IconLaporanV2, LogoMasjidGreen, IconMasjid, LogoMujahidin}

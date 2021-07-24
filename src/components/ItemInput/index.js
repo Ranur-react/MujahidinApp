@@ -16,6 +16,14 @@ class ItemInput extends Component{
     this.props.navprops.navigate('LaporanPage')
   }
 
+  forminputuser=()=>{
+    this.props.navprops.navigate('FormInputDataUser')
+  }
+
+  inputprofilmasjid=()=>{
+    this.props.navprops.navigate('FormInputDataProfilMasjid')
+  }
+
   render(){
     return(
       <ScrollView style = {styles.container}>
@@ -23,7 +31,7 @@ class ItemInput extends Component{
           <Text style = {styles.txtjudul}>Data Input</Text>
         </View>
 
-        <TouchableOpacity activeOpacity = {0.6} style = {styles.card}>
+        <TouchableOpacity activeOpacity = {0.6} style = {styles.card} onPress = {this.forminputuser}>
             <IconDataUser />
             <Text style = {styles.text}>Data User</Text>
         </TouchableOpacity>
@@ -33,7 +41,7 @@ class ItemInput extends Component{
             <Text style = {styles.text}>Input Data</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity activeOpacity = {0.6} style = {styles.card} >
+        <TouchableOpacity activeOpacity = {0.6} style = {styles.card} onPress = {this.inputprofilmasjid}>
             <IconMasjid />
             <Text style = {styles.text}>Profil Masjid</Text>
         </TouchableOpacity>

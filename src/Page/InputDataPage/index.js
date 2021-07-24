@@ -4,6 +4,41 @@ import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_
 import {IconBack, IconData} from '../../assets'
 
 class InputPage extends Component{
+  constructor(props){
+    super(props);
+  }
+
+  inputkegiatan=()=>{
+    this.props.navigation.navigate('FormInputDataKegiatan')
+  }
+
+  inputdonatur=()=>{
+    this.props.navigation.navigate('FormInputDataDonatur')
+  }
+
+  inputkategoriinfak=()=>{
+    this.props.navigation.navigate('FormInputDataKategoriInfak')
+  }
+
+  inputuangmasukdonasi=()=>{
+    this.props.navigation.navigate('FormInputDataUangMasukDonasi')
+  }
+
+  inputinfakkotakamal=()=>{
+    this.props.navigation.navigate('FormInputDataInfakKotakAmal')
+  }
+
+  inputpenerimadonasi=()=>{
+    this.props.navigation.navigate('FormInputDataPenerimaDonasi')
+  }
+
+  inputuangkeluar=()=>{
+    this.props.navigation.navigate('FormInputDataUangKeluar')
+  }
+
+  inputpemateri=()=>{
+    this.props.navigation.navigate('FormInputDataPemateri')
+  }
   render(){
     return(
       <View style = {styles.container}>
@@ -21,27 +56,42 @@ class InputPage extends Component{
 
         <View style = {styles.konten}>
         <ScrollView style = {{marginTop: 10}}>
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputpemateri}>
+            <IconData />
+            <Text style = {styles.text}>Data Pemateri</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputkegiatan}>
             <IconData />
             <Text style = {styles.text}>Data Kegiatan</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputdonatur}>
             <IconData />
             <Text style = {styles.text}>Data Donatur</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputkategoriinfak}>
             <IconData />
             <Text style = {styles.text}>Data Kategori Infak</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputuangmasukdonasi}>
+            <IconData />
+            <Text style = {styles.text}>Data Uang Masuk Donasi</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputinfakkotakamal}>
+            <IconData />
+            <Text style = {styles.text}>Data Infak Kotak Amal Masjid</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputpenerimadonasi}>
             <IconData />
             <Text style = {styles.text}>Data Penerima Donasi</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputuangkeluar}>
             <IconData />
             <Text style = {styles.text}>Data Uang Keluar Lainnya</Text>
           </TouchableOpacity>

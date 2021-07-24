@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import {Logo} from '../../assets';
+import {LogoMujahidin} from '../../assets';
 
 const Splash = ({navigation}) => {
 
@@ -12,7 +12,7 @@ const Splash = ({navigation}) => {
 
   return(
     <View style = {styles.logo}>
-      <Image source={Logo} />
+      <LogoMujahidin />
     </View>
   )
 }

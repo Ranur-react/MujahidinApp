@@ -50,6 +50,11 @@ class LaporanPage extends Component{
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Total Keseluruhan</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+            <IconLaporanV2 />
+            <Text style = {styles.text}>Lap. Uang Keluar Lainnya</Text>
+          </TouchableOpacity>
         </ScrollView>
         </View>
 

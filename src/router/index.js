@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {Splash, HomePage, InputPage, UserPage, InputDataPage, LaporanPage, LoginPage} from '../Page';
+import {Splash, HomePage, InputPage, UserPage, InputDataPage, LaporanPage, LoginPage, FormInputDataUser,
+        FormInputDataKegiatan, FormInputDataDonatur, FormInputDataKategoriInfak, FormInputDataUangMasukDonasi,
+        FormInputDataInfakKotakAmal, FormInputDataPenerimaDonasi, FormInputDataUangKeluar, FormInputDataProfilMasjid,
+        FormInputDataPemateri} from '../Page';
 import {BottomNavigator} from '../components';
 
 const Stack = createStackNavigator();
@@ -27,6 +30,16 @@ class Router extends Component{
         <Stack.Screen name="InputDataPage" component={InputDataPage} options={{headerShown: false}} />
         <Stack.Screen name="LaporanPage" component={LaporanPage} options={{headerShown: false}} />
         <Stack.Screen name="LoginPage" component={LoginPage} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataUser" component={FormInputDataUser} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataKegiatan" component={FormInputDataKegiatan} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataDonatur" component={FormInputDataDonatur} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataKategoriInfak" component={FormInputDataKategoriInfak} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataUangMasukDonasi" component={FormInputDataUangMasukDonasi} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataInfakKotakAmal" component={FormInputDataInfakKotakAmal} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataPenerimaDonasi" component={FormInputDataPenerimaDonasi} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataUangKeluar" component={FormInputDataUangKeluar} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataProfilMasjid" component={FormInputDataProfilMasjid} options={{headerShown: false}} />
+        <Stack.Screen name="FormInputDataPemateri" component={FormInputDataPemateri} options={{headerShown: false}} />
       </Stack.Navigator>
     )
   }
