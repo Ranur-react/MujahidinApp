@@ -1,5 +1,5 @@
 <?php
-include 'koneksi.php';
+include '../koneksi.php';
 if (isset($_POST['kode_user'])) {
 
     $kodeuser = $_POST['kode_user'];
@@ -12,7 +12,7 @@ if (isset($_POST['kode_user'])) {
     values ('$kodeuser', '$namauser', '$usernameuser', '$passworduser', '$leveluser');");
 
     if ($query) {
-        $data['pesan'] = "Data Anda Berhail";
+        $data['pesan'] = "Data Anda Berhasil";
         $data['status'] = true;
     } else {
         $data['pesan'] = "Data anda tidak valid";
@@ -23,3 +23,4 @@ if (isset($_POST['kode_user'])) {
     $data['status'] = false;
 }
 echo json_encode($data);
+?>

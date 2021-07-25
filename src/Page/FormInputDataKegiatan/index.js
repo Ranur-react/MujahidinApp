@@ -4,7 +4,44 @@ import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_
 import {IconBack, IconData} from '../../assets'
 
 class FormInputDataKegiatan extends Component{
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      secureTextEntry: true,
+      iconName: 'eye',
+      kode_kegiatan: '',
+      nama_kegiatan: '',
+      hari_kegiatan: '',
+      waktu_kegiatan: '',
+      namapem_kegiatan: '',
+    }
+  }
+
   render(){
+    const API_kegiatanmesjid = async () => {
+      var e = this.state;
+      let dataReturn;
+      let formdata = new FormData();
+
+      formdata.append("kode_kegiatan", e.kode_kegiatan)
+      formdata.append("nama_kegiatan", e.nama_kegiatan)
+      formdata.append("hari_kegiatan", e.hari_kegiatan)
+      formdata.append("waktu_kegiatan", e.waktu_kegiatan)
+      formdata.append("namapem_kegiatan", e.namapem_kegiatan)
+
+      let respond = await fetch("http://192.168.100.35/MujahidinApp/backendmujahiddinapp/datakegiatanmesjid/insert.php", {
+        method: "POST",
+        headers: { 'Content-Type': "multipart/form-data" },
+        body: formdata,
+      }).then(response => response.json()).then(responseJson => {
+
+        console.log(responseJson);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+
     return(
       <View style = {styles.container}>
 
@@ -23,30 +60,30 @@ class FormInputDataKegiatan extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Kode Kegiatan</Text>
-            <TextInput placeholder = 'Masukkan kode kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({kode_kegiatan:w})} placeholder = 'Masukkan kode kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Nama Kegiatan</Text>
-            <TextInput placeholder = 'Masukkan nama kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({nama_kegiatan:w})} placeholder = 'Masukkan nama kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Hari</Text>
-            <TextInput placeholder = 'Masukkan hari' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({hari_kegiatan:w})} placeholder = 'Masukkan hari' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Waktu</Text>
-            <TextInput placeholder = 'Masukkan waktu' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({waktu_kegiatan:w})} placeholder = 'Masukkan waktu' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Nama Pemateri</Text>
-            <TextInput placeholder = 'Masukkan nama pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({namapem_kegiatan:w})} placeholder = 'Masukkan nama pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={() =>API_kegiatanmesjid()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
         </ScrollView>
