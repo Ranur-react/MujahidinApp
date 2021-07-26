@@ -1,9 +1,15 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
-import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
-import {IconBack, IconData} from '../../assets'
-
-class FormInputDataKegiatan extends Component{
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
+import { API_kegiatanmesjid,API_PEMATERI } from '../../utils/api';
+import { IconBack, IconData } from '../../assets';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import Combobox from '../../components/_comobox';
+// import {
+//   Select,
+//   CheckIcon,
+// } from "native-base";
+class FormInputDataKegiatan extends Component {
 
   constructor(props) {
     super(props);
@@ -14,79 +20,83 @@ class FormInputDataKegiatan extends Component{
       nama_kegiatan: '',
       hari_kegiatan: '',
       waktu_kegiatan: '',
-      namapem_kegiatan: '',
+      idpematerikegiatan: '',
     }
   }
-
-  render(){
-    const API_kegiatanmesjid = async () => {
-      var e = this.state;
-      let dataReturn;
-      let formdata = new FormData();
-
-      formdata.append("kode_kegiatan", e.kode_kegiatan)
-      formdata.append("nama_kegiatan", e.nama_kegiatan)
-      formdata.append("hari_kegiatan", e.hari_kegiatan)
-      formdata.append("waktu_kegiatan", e.waktu_kegiatan)
-      formdata.append("namapem_kegiatan", e.namapem_kegiatan)
-
-      let respond = await fetch("http://192.168.100.35/MujahidinApp/backendmujahiddinapp/datakegiatanmesjid/insert.php", {
-        method: "POST",
-        headers: { 'Content-Type': "multipart/form-data" },
-        body: formdata,
-      }).then(response => response.json()).then(responseJson => {
-
-        console.log(responseJson);
-      }).catch(error => {
-        console.log(error);
-      });
+  LoadData=()=>{
+    const GET= async()=>{
+      var a=API_PEMATERI();
+      if(a.status){
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({pemateri:a.data})
+      }else{
+        showToastWithGravityAndOffset(a);
+      }
     }
+    GET()
+  }
+UNSAFE_componentWillMount(){
+this.LoadData();
+}
+  render() {
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_kegiatanmesjid(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
+    return (
+      <View style={styles.container}>
 
-    return(
-      <View style = {styles.container}>
-
-        <View style = {styles.header}>
-          <View style = {{flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
-            <TouchableOpacity activeOpacity = {0.5} onPress = {() => this.props.navigation.goBack()}>
+        <View style={styles.header}>
+          <View style={{ flexDirection: 'row', marginTop: 35, alignItems: 'center' }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => this.props.navigation.goBack()}>
               <IconBack />
             </TouchableOpacity>
-            <View style = {{marginLeft: 15}}>
-              <Text style = {styles.txtheader}>Input Data Kegiatan</Text>
+            <View style={{ marginLeft: 15 }}>
+              <Text style={styles.txtheader}>Input Data Kegiatan</Text>
             </View>
           </View>
         </View>
 
-        <View style = {styles.konten}>
-        <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Kode Kegiatan</Text>
-            <TextInput onChangeText={(w)=> this.setState({kode_kegiatan:w})} placeholder = 'Masukkan kode kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+        <View style={styles.konten}>
+          <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Kode Kegiatan</Text>
+              <TextInput onChangeText={(w) => this.setState({ kode_kegiatan: w })} placeholder='Masukkan kode kegiatan' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Nama Kegiatan</Text>
-            <TextInput onChangeText={(w)=> this.setState({nama_kegiatan:w})} placeholder = 'Masukkan nama kegiatan' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Nama Kegiatan</Text>
+              <TextInput onChangeText={(w) => this.setState({ nama_kegiatan: w })} placeholder='Masukkan nama kegiatan' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Hari</Text>
-            <TextInput onChangeText={(w)=> this.setState({hari_kegiatan:w})} placeholder = 'Masukkan hari' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Hari</Text>
+              <TextInput onChangeText={(w) => this.setState({ hari_kegiatan: w })} placeholder='Masukkan hari' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Waktu</Text>
-            <TextInput onChangeText={(w)=> this.setState({waktu_kegiatan:w})} placeholder = 'Masukkan waktu' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Waktu</Text>
+              <TextInput onChangeText={(w) => this.setState({ waktu_kegiatan: w })} placeholder='Masukkan waktu' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Nama Pemateri</Text>
-            <TextInput onChangeText={(w)=> this.setState({namapem_kegiatan:w})} placeholder = 'Masukkan nama pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Nama Pemateri</Text>
+              <TextInput onChangeText={(w) => this.setState({ namapem_kegiatan: w })} placeholder='Masukkan nama pemateri' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
+            <View style={{ marginBottom: 15 }}>
+              <Combobox pemateri={this.state.pemateri} />
+            </View>
 
-          <TouchableOpacity onPress={() =>API_kegiatanmesjid()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
-            <Text style = {styles.button}>Simpan</Text>
-          </TouchableOpacity>
-        </ScrollView>
+            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>Simpanx</Text>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
 
       </View>
@@ -116,19 +126,19 @@ const styles = StyleSheet.create({
   txtheader: {
     fontFamily: 'Raleway-Bold',
     color: 'white',
-    fontSize: TEKS_SIZE_TITTLE-2
+    fontSize: TEKS_SIZE_TITTLE - 2
   },
 
   txtlabel: {
     fontFamily: 'Raleway-Medium',
-    fontSize: TEKS_SIZE+4,
+    fontSize: TEKS_SIZE + 4,
     color: WARNA_TEKS,
     marginBottom: 5
   },
 
   txtinput: {
     fontFamily: 'Raleway-Medium',
-    fontSize: TEKS_SIZE+2,
+    fontSize: TEKS_SIZE + 2,
     borderWidth: 1,
     borderBottomRightRadius: 20,
     borderColor: WARNA_TEKS,
@@ -144,7 +154,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     fontWeight: 'bold',
-    fontSize: TEKS_SIZE+3,
+    fontSize: TEKS_SIZE + 3,
     color: 'white',
     elevation: 7,
     marginBottom: 30
