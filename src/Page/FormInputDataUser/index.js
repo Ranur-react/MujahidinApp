@@ -1,54 +1,38 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { IconBack, IconData } from '../../assets'
-
+import { API_user } from '../../utils/api';
+import { IconBack, IconData } from '../../assets';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 class FormInputDataUser extends Component {
   constructor(props) {
     super(props);
     this.state = {
       secureTextEntry: true,
       iconName: 'eye',
-      kode_user:'',
-      nama_user:'',
-      username_user:'',
-      password_user:'',
-      level_user:'',
+      kode_user: '',
+      nama_user: '',
+      username_user: '',
+      password_user: '',
+      level_user: '',
     }
   }
 
-  
+
 
 
   render() {
-    const API_user =  async() => {
-      var e=this.state;
-      let dataReturn;
-      let formdata = new FormData();
-  
-      formdata.append("kode_user",e.kode_user )
-     // formdata.append("kode_user",'1234567' )
-      formdata.append("nama_user", e.nama_user)
-      //formdata.append("nama_user", 'ade')
-      formdata.append("username_user", e.username_user)
-      //formdata.append("username_user", 'ade')
-      formdata.append("password_user", e.password_user)
-      //formdata.append("password_user", '11111')
-     formdata.append("level_user", e.level_user)
-     // formdata.append("level_user", '5')
-  
-      let respond = await fetch("http://192.168.100.35/MujahidinApp/backendmujahiddinapp/datauser/insert.php", {
-        method: "POST",
-        headers: { 'Content-Type': "multipart/form-data" },
-        body: formdata,
-      }).then(response => response.json()).then(responseJson => {
-        
-        console.log(responseJson);
-      }).catch(error => {
-        console.log(error);
-      });
-    }
-  
+        const simpan = () => {
+          var POST = async () => {
+            var resp = await API_user(this.state);
+            console.log(resp);
+            if (resp.status) {
+              showToastWithGravityAndOffset("Input Data User Berhasil");
+            }
+          }
+          POST()
+        }
+
     return (
       <View style={styles.container}>
 
@@ -67,30 +51,30 @@ class FormInputDataUser extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id User</Text>
-              <TextInput onChangeText={(w)=> this.setState({kode_user:w})}  placeholder='Masukkan id user' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ kode_user: w })} placeholder='Masukkan id user' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama User</Text>
-              <TextInput onChangeText={(w)=> this.setState({nama_user:w})} placeholder='Masukkan nama user' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ nama_user: w })} placeholder='Masukkan nama user' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Username</Text>
-              <TextInput onChangeText={(w)=> this.setState({username_user:w})} placeholder='Masukkan username' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ username_user: w })} placeholder='Masukkan username' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Password</Text>
-              <TextInput onChangeText={(w)=> this.setState({password_user:w})} placeholder='Masukkan password' placeholderTextColor="grey" secureTextEntry={this.state.secureTextEntry} style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ password_user: w })} placeholder='Masukkan password' placeholderTextColor="grey" secureTextEntry={this.state.secureTextEntry} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Level</Text>
-              <TextInput onChangeText={(w)=> this.setState({level_user:w})} placeholder='Masukkan level user' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ level_user: w })} placeholder='Masukkan level user' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
-            <TouchableOpacity onPress={() =>API_user()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
               <Text style={styles.button}>Simpan</Text>
             </TouchableOpacity>
           </ScrollView>
