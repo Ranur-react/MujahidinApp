@@ -4,7 +4,44 @@ import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_
 import {IconBack, IconData} from '../../assets'
 
 class FormInputDataDonatur extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      secureTextEntry: true,
+      iconName: 'eye',
+      kode_datadonatur:'',
+      nama_datadonatur:'',
+      alamat_donatur:'',
+      nohp_donatur:'',
+    }
+  }
+
+
+
+
   render(){
+    const API_donatur =  async() => {
+      var e=this.state;
+      let dataReturn;
+      let formdata = new FormData();
+  
+      formdata.append("kode_datadonatur",e.kode_datadonatur )
+      formdata.append("nama_datadonatur", e.nama_datadonatur)
+      formdata.append("alamat_donatur", e.alamat_donatur)
+      formdata.append("nohp_donatur", e.nohp_donatur)
+  
+      let respond = await fetch("http://192.168.43.107/backendmujahiddinapp/datadonatur/insert.php", {
+        method: "POST",
+        headers: { 'Content-Type': "multipart/form-data" },
+        body: formdata,
+      }).then(response => response.json()).then(responseJson => {
+        
+        console.log(responseJson);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  
     return(
       <View style = {styles.container}>
 
@@ -23,25 +60,25 @@ class FormInputDataDonatur extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Kode Donatur</Text>
-            <TextInput placeholder = 'Masukkan kode donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({kode_datadonatur:w})} placeholder = 'Masukkan kode donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Nama Donatur</Text>
-            <TextInput placeholder = 'Masukkan nama donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({nama_datadonatur:w})} placeholder = 'Masukkan nama donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Alamat Donatur</Text>
-            <TextInput placeholder = 'Masukkan alamat donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({alamat_donatur:w})} placeholder = 'Masukkan alamat donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>No Handphone</Text>
-            <TextInput placeholder = 'Masukkan no handphone' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({nohp_donatur:w})} placeholder = 'Masukkan no handphone' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={() =>API_donatur()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
         </ScrollView>

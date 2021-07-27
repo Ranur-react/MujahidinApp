@@ -8,7 +8,8 @@ if (isset($_POST['kode_kegiatan'])) {
     $waktukegiatan = $_POST['waktu_kegiatan'];
     $namapemkegiatan = $_POST['namapem_kegiatan'];
 
-    $query = mysqli_query($conn, " INSERT INTO `db_mujahiddin`.`tb_kegiatan` (`kode_kegiatan`, `nama_kegiatan`, `hari_kegiatan`, `waktu_kegiatan`, `namapem_kegiatan`) VALUES ('$kodekegiatan', '$namakegiatan', ' $harikegiatan', '$waktukegiatan', '$namapemkegiatan'); ");
+    $query = mysqli_query($conn, " INSERT INTO `db_mujahiddin`.`tb_kegiatan` (`kode_kegiatan`, `nama_kegiatan`, `hari_kegiatan`, `waktu_kegiatan`, `namapem_kegiatan`) 
+    VALUES ('$kodekegiatan', '$namakegiatan', ' $harikegiatan', '$waktukegiatan', '$namapemkegiatan'); ");
 
     if ($query) {
         $data['pesan'] = "Data Anda Berhasil";

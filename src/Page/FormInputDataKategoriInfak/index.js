@@ -4,7 +4,40 @@ import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_
 import {IconBack, IconData} from '../../assets'
 
 class FormInputDataKategoriInfak extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      secureTextEntry: true,
+      iconName: 'eye',
+      kodkatgr_infak:'',
+      namakatgr_infak:'',
+    }
+  }
+
+
+
+
   render(){
+    const API_kategori_infak =  async() => {
+      var e=this.state;
+      let dataReturn;
+      let formdata = new FormData();
+  
+      formdata.append("kodkatgr_infak",e.kodkatgr_infak )
+      formdata.append("namakatgr_infak", e.namakatgr_infak)
+    
+      let respond = await fetch("http://192.168.43.107/backendmujahiddinapp/datakategoriinfak/insert.php", {
+        method: "POST",
+        headers: { 'Content-Type': "multipart/form-data" },
+        body: formdata,
+      }).then(response => response.json()).then(responseJson => {
+        
+        console.log(responseJson);
+      }).catch(error => {
+        console.log(error);
+      });
+    }
+  
     return(
       <View style = {styles.container}>
 
@@ -23,15 +56,15 @@ class FormInputDataKategoriInfak extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Kode Kategori</Text>
-            <TextInput placeholder = 'Masukkan kode kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({kodkatgr_infak:w})} placeholder = 'Masukkan kode kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Nama Kategori</Text>
-            <TextInput placeholder = 'Masukkan nama kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({namakatgr_infak:w})} placeholder = 'Masukkan nama kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={() =>API_kategori_infak()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
         </ScrollView>
