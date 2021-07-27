@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData} from '../../assets'
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import {API_donatur} from '../../utils/api';
 
 class FormInputDataDonatur extends Component{
   constructor(props) {
@@ -20,28 +22,17 @@ class FormInputDataDonatur extends Component{
 
 
   render(){
-    const API_donatur =  async() => {
-      var e=this.state;
-      let dataReturn;
-      let formdata = new FormData();
-  
-      formdata.append("kode_datadonatur",e.kode_datadonatur )
-      formdata.append("nama_datadonatur", e.nama_datadonatur)
-      formdata.append("alamat_donatur", e.alamat_donatur)
-      formdata.append("nohp_donatur", e.nohp_donatur)
-  
-      let respond = await fetch("http://192.168.43.107/backendmujahiddinapp/datadonatur/insert.php", {
-        method: "POST",
-        headers: { 'Content-Type': "multipart/form-data" },
-        body: formdata,
-      }).then(response => response.json()).then(responseJson => {
-        
-        console.log(responseJson);
-      }).catch(error => {
-        console.log(error);
-      });
+   
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_donatur(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
     }
-  
     return(
       <View style = {styles.container}>
 
@@ -78,7 +69,7 @@ class FormInputDataDonatur extends Component{
             <TextInput onChangeText={(w)=> this.setState({nohp_donatur:w})} placeholder = 'Masukkan no handphone' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity onPress={() =>API_donatur()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={() =>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
         </ScrollView>

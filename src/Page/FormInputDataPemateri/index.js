@@ -2,16 +2,30 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData} from '../../assets'
+import {API_pemateri} from '../../utils/api';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 
 class FormInputDataPemateri extends Component{
   constructor(props){
     super(props);
     this.state = {
       secureTextEntry: true,
-      iconName: 'eye'
+      iconName: 'eye',
+      kode_pemateri:'',
+      nama_pemateri:'',
     }
   }
   render(){
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_pemateri(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
     return(
       <View style = {styles.container}>
 
@@ -30,15 +44,15 @@ class FormInputDataPemateri extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Kode Pemateri</Text>
-            <TextInput placeholder = 'Masukkan kode pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput  onChangeText={(w) => this.setState({ kode_pemateri: w })} placeholder = 'Masukkan kode pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Nama Pemateri</Text>
-            <TextInput placeholder = 'Masukkan nama pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w) => this.setState({ nama_pemateri: w })} placeholder = 'Masukkan nama pemateri' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={()=>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
         </ScrollView>
