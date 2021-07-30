@@ -1,7 +1,40 @@
 import { BASE_URL } from './constant';
 import { showToastWithGravityAndOffset } from '../components/_Toasview';
 //GET
+export const API_DATADONATUR = async () => {
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datadonatur/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
+export const API_KEGIATANMASJID = async () => {
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakegiatanmesjid/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_KEGIATAN = async () => {
+  let dataReturn;
   showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataKegiatan/", {
     method: "GET",
@@ -17,6 +50,7 @@ export const API_KEGIATAN = async () => {
   return dataReturn;
 }
 export const API_PEMATERI = async () => {
+  let dataReturn;
   showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/", {
     method: "GET",
@@ -32,7 +66,54 @@ export const API_PEMATERI = async () => {
   return dataReturn;
 }
 
+export const API_PEMATERIDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("kode_pemateri", res)
+  showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 //POST
+export const API_INPUTDATAUANGMASUKDONASI =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_uangmasuk",e.id_uangmasuk )
+  formdata.append("tanggal_donmasuk", e.tanggal_donmasuk)
+  formdata.append("iddon_donmasuk", e.iddon_donmasuk)
+  formdata.append("ket_donmasuk", e.ket_donmasuk)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataUangMasukDonasi/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_kategori_infak =  async(res) => {
   var e=res;
   let dataReturn;
@@ -41,7 +122,7 @@ export const API_kategori_infak =  async(res) => {
   formdata.append("kodkatgr_infak",e.kodkatgr_infak )
   formdata.append("namakatgr_infak", e.namakatgr_infak)
 
-  let respond = await fetch("http://192.168.43.107/backendmujahiddinapp/datakategoriinfak/insert.php", {
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datakategoriinfak/insert.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
@@ -81,7 +162,7 @@ export const API_donatur =  async(res) => {
   dataReturn = respond;
   return dataReturn;
 }
-export const API_pemateri = async (res) => {
+export const API_PEMATERIINSERT = async (res) => {
   var e = res;
   let dataReturn;
   let formdata = new FormData();
@@ -132,7 +213,7 @@ export const API_user = async (res) => {
 }
 
 
-export const API_kegiatanmesjid = async (res) => {
+export const API_KEGIATANMASJIDINSERT = async (res) => {
   var e = res;
   let dataReturn;
   let formdata = new FormData();
@@ -147,8 +228,8 @@ export const API_kegiatanmesjid = async (res) => {
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
   }).then(response => response.json()).then(responseJson => {
-    return responseJson
     console.log(responseJson);
+    return responseJson
   }).catch(error => {
     console.log(error);
     showToastWithGravityAndOffset(error)

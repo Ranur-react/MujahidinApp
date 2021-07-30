@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text, Platform,StyleSheet, TouchableOpacity,Modal, ScrollView, TextInput,Dimensions } from 'react-native';
+import { View, Text, Platform, StyleSheet, TouchableOpacity, Modal, ScrollView, TextInput, Dimensions } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_kegiatanmesjid, API_PEMATERI, API_KEGIATAN } from '../../utils/api';
+import { API_KEGIATANMASJID, API_KEGIATANMASJIDINSERT, API_PEMATERI, API_KEGIATAN } from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import SelectInputNative from '../../components/_comboBox';
 // import SelectInputNativeKegiatan from '../../components/_comboBoxKegiatan';
+
+import DataView from '../../components/_dataView';
+
 import { Picker, DatePicker } from 'react-native-wheel-pick';
 const isIos = Platform.OS === 'ios';
 class FormInputDataKegiatan extends Component {
@@ -45,6 +48,17 @@ class FormInputDataKegiatan extends Component {
         showToastWithGravityAndOffset(a);
       }
     }
+    const GETPKEGIATANMASJID = async () => {
+      console.log("cafkegiatan");
+      var a = await API_KEGIATANMASJID();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request Kegiatan masjid succes");
+        this.setState({ kegiatanMasjid: a.data })
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+    GETPKEGIATANMASJID();
     GETPKEGIATAN();
     GETPEMATERI();
   }
@@ -62,13 +76,29 @@ class FormInputDataKegiatan extends Component {
     }
     const simpan = () => {
       var POST = async () => {
-        var resp = await API_kegiatanmesjid(this.state);
+        var resp = await API_KEGIATANMASJIDINSERT(this.state);
         console.log(resp);
         if (resp.status) {
           showToastWithGravityAndOffset(resp.pesan);
         }
       }
       POST()
+    }
+    const Data = () => {
+      if (!this.state.kegiatanMasjid) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.kegiatanMasjid.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
     }
     return (
       <View style={styles.container}>
@@ -157,6 +187,13 @@ class FormInputDataKegiatan extends Component {
                 <SelectInputNative lable="Pilih Pemateri" lebar={'100%'} selectedValue={this.state.idpematerikegiatan} onSelectData={(e) => pilihPemateri(e)} data={this.state.pemateri} />
               }
             </View>
+            <View style={{ marginBottom: 15 }}>
+              {
+              <Data />
+
+              }
+
+            </View>
 
             <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
               <Text style={styles.button}>Simpanx</Text>
@@ -174,11 +211,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: WARNA_UTAMA
-  },buttonClose: {
+  }, buttonClose: {
     backgroundColor: "#2196F3",
     height: TEKS_SIZE * 2,
     width: TEKS_SIZE * 5
-  },textStyle: {
+  }, textStyle: {
     color: "white",
     fontWeight: "bold",
     textAlign: "center",
