@@ -196,6 +196,31 @@ export const API_KATEGORIINFAKDELETE=async(res)=>{
   return dataReturn;
 }
 //POST
+export const API_INPDATAUANGKELUARLAINNYA =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_keluar",e.id_keluar )
+  formdata.append("tanggal_keluar", e.tanggal_keluar)
+  formdata.append("uraian_keluar", e.uraian_keluar)
+  formdata.append("jumlah_keluar", e.jumlah_keluar)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datadonatur/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_INPUTDONATUR =  async(res) => {
   var e=res;
   let dataReturn;
