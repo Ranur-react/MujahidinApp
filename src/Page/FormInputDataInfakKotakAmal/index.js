@@ -1,10 +1,45 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
+import {View,Platform, Text, StyleSheet,Modal, TouchableOpacity, Dimensions,ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
-import {IconBack, IconData} from '../../assets'
-
+import {IconBack, IconData} from '../../assets';
+import {  API_DATAKATEGORIINFAK} from '../../utils/api';
+import SelectInputNative from '../../components/_comboBox';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import { Picker, DatePicker } from 'react-native-wheel-pick';
+const isIos = Platform.OS === 'ios';
 class FormInputDataInfakKotakAmal extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      id_datainfak:'',
+      tanggal_datainfak: new Date().toISOString().slice(0, 10),
+      idkatgr_datainfak:'',
+      modalVisible: false ,
+    }
+  }
+  LoadData = () => {
+    const GETINFAK = async () => {
+      console.log("cafx");
+      var a = await API_DATAKATEGORIINFAK();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ datainfak: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+
+    GETINFAK();
+  }
+  UNSAFE_componentWillMount() {
+    // this.LoadData();
+  }
+
   render(){
+    const piliKategori = (e) => {
+      this.setState({ idkatgr_datainfak: e })
+    }
     return(
       <View style = {styles.container}>
 
@@ -26,20 +61,58 @@ class FormInputDataInfakKotakAmal extends Component{
             <TextInput placeholder = 'Masukkan id infak' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Tanggal</Text>
-            <TextInput placeholder = 'Masukkan tanggal' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+          <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Tanggal</Text>
+              <TextInput placeholder='Masukkan tanggal' onFocus={(e) => this.setState({ modalVisible: true })} value={this.state.tanggal_datainfak} placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
+            <View>
+              {
+                <View>
+                  <Modal animationType="slide" transparent={true}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => {
+                      alert("Modal has been closed.");
+                      (e) => this.setState({ modalVisible: false })
+                    }}
+                  >
+                    <View style={styles.centeredView} >
+                      <TouchableOpacity onPress={(e) => this.setState({ modalVisible: false })} style={[styles.modalView, { opacity: 0 }]} ></TouchableOpacity>
+                      <View style={styles.modalView} onPress={() => console.log("xx")}>
+
+                        <DatePicker onTouchCancel={() => console.log("focus")}
+                          style={{ backgroundColor: 'white', height: '100%', width: isIos ? 300 : undefined }}
+                          minimumDate={new Date('2015-01-01')}
+                          maximumDate={new Date('2030-12-12')}
+                          onDateChange={date => { this.setState({ tanggal_datainfak: new Date(date).toISOString().slice(0, 10) }) }}
+                        />
+                        <TouchableOpacity
+                          style={[styles.button]}
+                          onPress={(e) => this.setState({ modalVisible: false })}
+                        >
+                          <Text style={styles.textStyle}>OK</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <TouchableOpacity onPress={(e) => this.setState({ modalVisible: false })} style={[styles.modalView, { opacity: 0 }]} ></TouchableOpacity>
+                    </View>
+                  </Modal>
+
+                </View>
+              }
+            </View>
+          
 
           <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Id Kategori</Text>
-            <TextInput placeholder = 'Masukkan id kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <Text style = {styles.txtlabel}>Kategori Infak</Text>
+            {/* <TextInput placeholder = 'Masukkan id kategori' placeholderTextColor = "grey" style = {styles.txtinput} /> */}
+            <View>
+                {
+                  <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'} selectedValue={this.state.idkatgr_datainfak} onSelectData={(e) => piliKategori(e)} data={this.state.datainfak} />
+
+                }
+              </View>
           </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Nama Kategori</Text>
-            <TextInput placeholder = 'Masukkan nama kategori' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+     
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Jumlah (Rp)</Text>
@@ -57,6 +130,7 @@ class FormInputDataInfakKotakAmal extends Component{
   }
 }
 export default FormInputDataInfakKotakAmal
+const { height: HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -111,5 +185,36 @@ const styles = StyleSheet.create({
     color: 'white',
     elevation: 7,
     marginBottom: 30
-  }
+  },
+  modalView: {
+    flex: 1,
+    width: '100%',
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    }, shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: 16,
+  },
+  centeredView: {
+    position: 'absolute',
+    display: 'flex',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    width: '100%',
+    height: HEIGHT,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
 })

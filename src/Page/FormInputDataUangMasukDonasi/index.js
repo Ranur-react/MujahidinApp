@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Platform, Modal, Dimensions, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
-import { API_DATADONATUR,API_INPUTDATAUANGMASUKDONASI } from '../../utils/api';
+import { API_DATADONATUR,API_INPUTDATAUANGMASUKDONASI,API_DATAUANGMASUK } from '../../utils/api';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import SelectInputNative from '../../components/_comboBox';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
+import DataView from '../../components/_dataView';
+
 const isIos = Platform.OS === 'ios';
 class FormInputDataUangMasukDonasi extends Component {
   constructor(props) {
@@ -14,6 +16,7 @@ class FormInputDataUangMasukDonasi extends Component {
       id_uangmasuk: '',
       tanggal_donmasuk: new Date().toISOString().slice(0, 10),
       iddon_donmasuk: '',
+      jumlah:'',
       ket_donmasuk: '',
       modalVisible: false
     }
@@ -31,6 +34,18 @@ class FormInputDataUangMasukDonasi extends Component {
       }
     }
 
+    const GETINFOUANGMASUK = async () => {
+      console.log("caf");
+      var a = await API_DATAUANGMASUK();
+      console.log(a);
+      if (a.status) {
+        showToastWithGravityAndOffset("Ambil Data Uang Masuk succes");
+        this.setState({ uangmasuk: a.dataSmall })
+      } else {
+        showToastWithGravityAndOffset(a.toString());
+      }
+    }
+    GETINFOUANGMASUK()
     GETDONATUR();
   }
   UNSAFE_componentWillMount() {
@@ -44,14 +59,31 @@ class FormInputDataUangMasukDonasi extends Component {
     const simpan = () => {
       var POST = async () => {
         var resp = await API_INPUTDATAUANGMASUKDONASI(this.state);
+        console.log("---UANG MASUK---");
         console.log(resp);
         if (resp.status) {
           showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
         }
       }
       POST()
     }
-
+    const Data = () => {
+      if (!this.state.uangmasuk) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.uangmasuk.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
+    }
     return (
       <View style={styles.container}>
 
@@ -70,7 +102,7 @@ class FormInputDataUangMasukDonasi extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id Uang Masuk</Text>
-              <TextInput placeholder='Masukkan id uang masuk' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(e)=>this.setState({id_uangmasuk:e})} placeholder='Masukkan id uang masuk' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
@@ -86,7 +118,7 @@ class FormInputDataUangMasukDonasi extends Component {
                     visible={this.state.modalVisible}
                     onRequestClose={() => {
                       alert("Modal has been closed.");
-                      (e) => this.setState({ ViewDate: false })
+                      (e) => this.setState({ modalVisible: false })
                     }}
                   >
                     <View style={styles.centeredView} >
@@ -134,17 +166,21 @@ class FormInputDataUangMasukDonasi extends Component {
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Jumlah (Rp)</Text>
-              <TextInput placeholder='Masukkan jumlah uang' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(e)=>this.setState({jumlah:e})} placeholder='Masukkan jumlah uang' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Keterangan</Text>
-              <TextInput placeholder='Masukkan keterangan' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(e)=>this.setState({ket_donmasuk:e})} placeholder='Masukkan keterangan' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
               <Text style={styles.button}>Simpan</Text>
             </TouchableOpacity>
+
+           <View>
+            <Data/> 
+            </View> 
           </ScrollView>
         </View>
 

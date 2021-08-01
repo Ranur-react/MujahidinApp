@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData} from '../../assets'
-import { API_kategori_infak } from '../../utils/api';
+import { API_kategori_infak , API_DATAKATEGORIINFAK,API_KATEGORIINFAKDELETE} from '../../utils/api';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import DataView from '../../components/_dataView';
   
 class FormInputDataKategoriInfak extends Component{
   constructor(props) {
@@ -17,19 +18,63 @@ class FormInputDataKategoriInfak extends Component{
   }
 
 
+  LoadData = () => {
+    const GETINFAK = async () => {
+      console.log("cafx");
+      var a = await API_DATAKATEGORIINFAK();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ datainfak: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
 
+    GETINFAK();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
 
   render(){
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_KATEGORIINFAKDELETE(e);
 
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST(e)
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_kategori_infak(this.state);
         console.log(resp);
         if (resp.status) {
           showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
         }
       }
       POST()
+    }
+    const Data = () => {
+      if (!this.state.datainfak) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.datainfak.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
     }
     return(
       
@@ -61,6 +106,9 @@ class FormInputDataKategoriInfak extends Component{
           <TouchableOpacity onPress={() =>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
+          <View>
+            <Data/>
+          </View>
         </ScrollView>
         </View>
 

@@ -1,78 +1,127 @@
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
-import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
-import {IconBack, IconData} from '../../assets'
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
+import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
+import { IconBack, IconData } from '../../assets'
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
-import {API_donatur} from '../../utils/api';
+import { API_INPUTDONATUR,API_DONATURDELETE, API_DATADONATUR } from '../../utils/api';
+import DataView from '../../components/_dataView';
 
-class FormInputDataDonatur extends Component{
+class FormInputDataDonatur extends Component {
   constructor(props) {
     super(props);
     this.state = {
       secureTextEntry: true,
       iconName: 'eye',
-      kode_datadonatur:'',
-      nama_datadonatur:'',
-      alamat_donatur:'',
-      nohp_donatur:'',
+      kode_datadonatur: '',
+      nama_datadonatur: '',
+      alamat_donatur: '',
+      nohp_donatur: '',
     }
   }
 
+  LoadData = () => {
+    const GETDONATUR = async () => {
+      console.log("cafx");
+      var a = await API_DATADONATUR();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ donatur: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+
+    GETDONATUR();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
 
 
+  render() {
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_DONATURDELETE(e);
 
-  render(){
-   
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST(e)
+    }
+    const Data = () => {
+      if (!this.state.donatur) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.donatur.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
+    }
     const simpan = () => {
       var POST = async () => {
-        var resp = await API_donatur(this.state);
+        var resp = await API_INPUTDONATUR(this.state);
         console.log(resp);
         if (resp.status) {
           showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
         }
       }
       POST()
     }
-    return(
-      <View style = {styles.container}>
+    return (
+      <View style={styles.container}>
 
-        <View style = {styles.header}>
-          <View style = {{flexDirection: 'row', marginTop: 35, alignItems: 'center'}}>
-            <TouchableOpacity activeOpacity = {0.5} onPress = {() => this.props.navigation.goBack()}>
+        <View style={styles.header}>
+          <View style={{ flexDirection: 'row', marginTop: 35, alignItems: 'center' }}>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => this.props.navigation.goBack()}>
               <IconBack />
             </TouchableOpacity>
-            <View style = {{marginLeft: 15}}>
-              <Text style = {styles.txtheader}>Input Data Donatur</Text>
+            <View style={{ marginLeft: 15 }}>
+              <Text style={styles.txtheader}>Input Data Donatur</Text>
             </View>
           </View>
         </View>
 
-        <View style = {styles.konten}>
-        <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Kode Donatur</Text>
-            <TextInput onChangeText={(w)=> this.setState({kode_datadonatur:w})} placeholder = 'Masukkan kode donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+        <View style={styles.konten}>
+          <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Kode Donatur</Text>
+              <TextInput onChangeText={(w) => this.setState({ kode_datadonatur: w })} placeholder='Masukkan kode donatur' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Nama Donatur</Text>
-            <TextInput onChangeText={(w)=> this.setState({nama_datadonatur:w})} placeholder = 'Masukkan nama donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Nama Donatur</Text>
+              <TextInput onChangeText={(w) => this.setState({ nama_datadonatur: w })} placeholder='Masukkan nama donatur' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>Alamat Donatur</Text>
-            <TextInput onChangeText={(w)=> this.setState({alamat_donatur:w})} placeholder = 'Masukkan alamat donatur' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>Alamat Donatur</Text>
+              <TextInput onChangeText={(w) => this.setState({ alamat_donatur: w })} placeholder='Masukkan alamat donatur' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <View style = {{marginBottom: 15}}>
-            <Text style = {styles.txtlabel}>No Handphone</Text>
-            <TextInput onChangeText={(w)=> this.setState({nohp_donatur:w})} placeholder = 'Masukkan no handphone' placeholderTextColor = "grey" style = {styles.txtinput} />
-          </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>No Handphone</Text>
+              <TextInput onChangeText={(w) => this.setState({ nohp_donatur: w })} placeholder='Masukkan no handphone' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
 
-          <TouchableOpacity onPress={() =>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
-            <Text style = {styles.button}>Simpan</Text>
-          </TouchableOpacity>
-        </ScrollView>
+            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>Simpan</Text>
+            </TouchableOpacity>
+            <View style={{ marginBottom: 15 }}>
+            <Data />
+          </View>
+          </ScrollView>
+         
         </View>
 
       </View>
@@ -102,19 +151,19 @@ const styles = StyleSheet.create({
   txtheader: {
     fontFamily: 'Raleway-Bold',
     color: 'white',
-    fontSize: TEKS_SIZE_TITTLE-2
+    fontSize: TEKS_SIZE_TITTLE - 2
   },
 
   txtlabel: {
     fontFamily: 'Raleway-Medium',
-    fontSize: TEKS_SIZE+4,
+    fontSize: TEKS_SIZE + 4,
     color: WARNA_TEKS,
     marginBottom: 5
   },
 
   txtinput: {
     fontFamily: 'Raleway-Medium',
-    fontSize: TEKS_SIZE+2,
+    fontSize: TEKS_SIZE + 2,
     borderWidth: 1,
     borderBottomRightRadius: 20,
     borderColor: WARNA_TEKS,
@@ -130,7 +179,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     fontWeight: 'bold',
-    fontSize: TEKS_SIZE+3,
+    fontSize: TEKS_SIZE + 3,
     color: 'white',
     elevation: 7,
     marginBottom: 30
