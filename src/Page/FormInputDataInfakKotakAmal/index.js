@@ -2,10 +2,12 @@ import React, {Component} from 'react';
 import {View,Platform, Text, StyleSheet,Modal, TouchableOpacity, Dimensions,ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData} from '../../assets';
-import {  API_DATAKATEGORIINFAK} from '../../utils/api';
+import {  API_DATAKATEGORIINFAK,API_DATAUANGMASUKINFAK,API_INPUTDATAUANGMASUKINFAK} from '../../utils/api';
 import SelectInputNative from '../../components/_comboBox';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
+import DataView from '../../components/_dataView';
+
 const isIos = Platform.OS === 'ios';
 class FormInputDataInfakKotakAmal extends Component{
   constructor(props) {
@@ -14,6 +16,7 @@ class FormInputDataInfakKotakAmal extends Component{
       id_datainfak:'',
       tanggal_datainfak: new Date().toISOString().slice(0, 10),
       idkatgr_datainfak:'',
+      jumlah_datainfak:'',
       modalVisible: false ,
     }
   }
@@ -23,20 +26,59 @@ class FormInputDataInfakKotakAmal extends Component{
       var a = await API_DATAKATEGORIINFAK();
       if (a.status) {
         showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ datainfakkategori: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+    const GETINFAKMASUK = async () => {
+      console.log("cafx");
+      var a = await API_DATAUANGMASUKINFAK();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
         this.setState({ datainfak: a.data })
         console.log(a);
       } else {
         showToastWithGravityAndOffset(a);
       }
     }
-
+    GETINFAKMASUK();
     GETINFAK();
   }
   UNSAFE_componentWillMount() {
-    // this.LoadData();
+    this.LoadData();
   }
 
   render(){
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_INPUTDATAUANGMASUKINFAK(this.state);
+        console.log("---UANG MASUK---");
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST()
+    }
+    const Data = () => {
+      if (!this.state.datainfak) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.datainfak.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
+    }
     const piliKategori = (e) => {
       this.setState({ idkatgr_datainfak: e })
     }
@@ -58,7 +100,7 @@ class FormInputDataInfakKotakAmal extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Id Infak</Text>
-            <TextInput placeholder = 'Masukkan id infak' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(e)=>this.setState({id_datainfak:e})} placeholder = 'Masukkan id infak' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style={{ marginBottom: 15 }}>
@@ -106,7 +148,7 @@ class FormInputDataInfakKotakAmal extends Component{
             {/* <TextInput placeholder = 'Masukkan id kategori' placeholderTextColor = "grey" style = {styles.txtinput} /> */}
             <View>
                 {
-                  <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'} selectedValue={this.state.idkatgr_datainfak} onSelectData={(e) => piliKategori(e)} data={this.state.datainfak} />
+                  <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'} selectedValue={this.state.idkatgr_datainfak} onSelectData={(e) => piliKategori(e)} data={this.state.datainfakkategori} />
 
                 }
               </View>
@@ -116,12 +158,15 @@ class FormInputDataInfakKotakAmal extends Component{
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Jumlah (Rp)</Text>
-            <TextInput placeholder = 'Masukkan jumlah uang' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(e)=>this.setState({jumlah_datainfak:e})} placeholder = 'Masukkan jumlah uang' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={()=>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
+          <View>
+          <Data/>
+          </View>
         </ScrollView>
         </View>
 

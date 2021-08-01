@@ -1,6 +1,22 @@
 import { BASE_URL } from './constant';
 import { showToastWithGravityAndOffset } from '../components/_Toasview';
 //GET
+export const API_DATAUANGMASUKINFAK=async()=>{
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataInfakKotakAmal/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_DATAUANGMASUK=async()=>{
   let dataReturn;
   showToastWithGravityAndOffset("GET : " + BASE_URL)
@@ -175,6 +191,31 @@ export const API_INPUTDONATUR =  async(res) => {
   formdata.append("nohp_donatur", e.nohp_donatur)
 
   let respond = await fetch(BASE_URL+"backendmujahiddinapp/datadonatur/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
+export const API_INPUTDATAUANGMASUKINFAK = async (res)=>{
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_datainfak",e.id_datainfak )
+  formdata.append("tanggal_datainfak", e.tanggal_datainfak)
+  formdata.append("idkatgr_datainfak", e.idkatgr_datainfak)
+  formdata.append("jumlah_datainfak", e.jumlah_datainfak)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataInfakKotakAmal/insert.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
