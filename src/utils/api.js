@@ -1,6 +1,22 @@
 import { BASE_URL } from './constant';
 import { showToastWithGravityAndOffset } from '../components/_Toasview';
 //GET
+export const API_DATAPENERIMA=async()=>{
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPenerima/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_DATAUANGMASUKINFAK=async()=>{
   let dataReturn;
   showToastWithGravityAndOffset("GET : " + BASE_URL)
@@ -354,7 +370,32 @@ export const API_user = async (res) => {
   return dataReturn;
 }
 
+export const API_INPUTDATAPENERIMA =async(res)=>{
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
 
+  formdata.append("id_dataspenerima", e.id_dataspenerima)
+  formdata.append("nama_penerima", e.nama_penerima)
+  formdata.append("alamat_penerima", e.alamat_penerima)
+  formdata.append("nohp_penerima", e.nohp_penerima)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataPenerima/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    showToastWithGravityAndOffset(error)
+    return error
+  });
+  
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_KEGIATANMASJIDINSERT = async (res) => {
   var e = res;
   let dataReturn;
