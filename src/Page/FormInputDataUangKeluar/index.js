@@ -6,7 +6,8 @@ import SelectInputNative from '../../components/_comboBox';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
 import DataView from '../../components/_dataView';
-import {  API_INPDATAUANGKELUARLAINNYA} from '../../utils/api';
+import {  API_INPDATAUANGKELUARLAINNYA,API_DATAUANGKELUARLAINNYA} from '../../utils/api';
+const isIos = Platform.OS === 'ios';
 
 class FormInputDataUangKeluar extends Component{
   constructor(props) {
@@ -20,8 +21,54 @@ class FormInputDataUangKeluar extends Component{
 
     }
   }
-  render(){
+  LoadData = () => {
+    const GETUANGKELUAR = async () => {
+      console.log("cafx");
+      var a = await API_DATAUANGKELUARLAINNYA();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ datauangkeluar: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
     
+    GETUANGKELUAR();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
+  
+  render(){
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_INPDATAUANGKELUARLAINNYA(this.state);
+        console.log("---UANG MASUK---");
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST()
+    }
+    const Data = () => {
+      if (!this.state.datauangkeluar) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.datauangkeluar.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
+    }
     return(
       <View style = {styles.container}>
 
@@ -92,9 +139,11 @@ class FormInputDataUangKeluar extends Component{
             <TextInput onChangeText={(w)=> this.setState({jumlah_keluar:w})} placeholder = 'Masukkan jumlah uang' keyboardType = 'numeric'  placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
+          <TouchableOpacity onPress={()=>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
             <Text style = {styles.button}>Simpan</Text>
           </TouchableOpacity>
+          <Data/>
+
         </ScrollView>
         </View>
 

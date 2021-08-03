@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_user } from '../../utils/api';
+import { API_user, API_DATAUSER,API_USERDELETE } from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import DataView from '../../components/_dataView';
+
 class FormInputDataUser extends Component {
   constructor(props) {
     super(props);
@@ -18,21 +20,67 @@ class FormInputDataUser extends Component {
     }
   }
 
+  LoadData = () => {
+    const GETUSER = async () => {
+      console.log("cafx");
+      var a = await API_DATAUSER();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ datauser: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a.toString());
+      }
+    }
 
+    GETUSER();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
 
 
   render() {
-        const simpan = () => {
-          var POST = async () => {
-            var resp = await API_user(this.state);
-            console.log(resp);
-            if (resp.status) {
-              showToastWithGravityAndOffset("Input Data User Berhasil");
-            }
-          }
-          POST()
-        }
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_user(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset("Input Data User Berhasil");
+          this.LoadData();
 
+        }
+      }
+      POST()
+    }
+    const hapus = (e) => {
+      console.log(e);
+      var POST = async (e) => {
+        var resp = await API_USERDELETE(e);
+
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST(e)
+    }
+    const Data = () => {
+      if (!this.state.datauser) {
+        return (<View></View>)
+      } else {
+        return (
+          <View>
+            {
+              this.state.datauser.map((value, i) => {
+                return (
+                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                )
+              })
+            }
+          </View>)
+      }
+    }
     return (
       <View style={styles.container}>
 
@@ -77,6 +125,7 @@ class FormInputDataUser extends Component {
             <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
               <Text style={styles.button}>Simpan</Text>
             </TouchableOpacity>
+            <Data />
           </ScrollView>
         </View>
 

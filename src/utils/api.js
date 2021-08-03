@@ -1,6 +1,39 @@
 import { BASE_URL } from './constant';
 import { showToastWithGravityAndOffset } from '../components/_Toasview';
-//GET
+//GET]
+
+export const API_DATAUSER=async()=>{
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
+export const API_DATAUANGKELUARLAINNYA=async()=>{
+  let dataReturn;
+  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangKeluarLainnya/", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_DATAPENERIMA=async()=>{
   let dataReturn;
   showToastWithGravityAndOffset("GET : " + BASE_URL)
@@ -151,6 +184,28 @@ export const API_DONATURDELETE = async (res) => {
   dataReturn = respond;
   return dataReturn;
 }
+export const API_USERDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("kode_user", res)
+  showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_PEMATERIDELETE = async (res) => {
   let dataReturn;
   let formdata = new FormData();
@@ -206,7 +261,7 @@ export const API_INPDATAUANGKELUARLAINNYA =  async(res) => {
   formdata.append("uraian_keluar", e.uraian_keluar)
   formdata.append("jumlah_keluar", e.jumlah_keluar)
 
-  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datadonatur/insert.php", {
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataUangKeluarLainnya/insert.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
@@ -368,6 +423,7 @@ export const API_PEMATERIINSERT = async (res) => {
   dataReturn = respond;
   return dataReturn;
 }
+
 export const API_user = async (res) => {
   var e = res;
   let dataReturn;
