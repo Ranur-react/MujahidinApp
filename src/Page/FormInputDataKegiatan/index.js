@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, Platform, StyleSheet, TouchableOpacity, Modal, ScrollView, TextInput, Dimensions } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_KEGIATANMASJID, API_KEGIATANMASJIDINSERT, API_PEMATERI, API_KEGIATAN } from '../../utils/api';
+import { API_KEGIATANMASJID, API_KEGIATANMASJIDINSERT, API_PEMATERI, API_KEGIATAN, API_DATAHARI } from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import SelectInputNative from '../../components/_comboBox';
 // import SelectInputNativeKegiatan from '../../components/_comboBoxKegiatan';
+
 
 import DataView from '../../components/_dataView';
 
@@ -38,6 +39,16 @@ class FormInputDataKegiatan extends Component {
         showToastWithGravityAndOffset(a);
       }
     }
+    const GETHARI = async () => {
+      console.log("caf");
+      var a = await API_DATAHARI();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ hari: a.data })
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
     const GETPKEGIATAN = async () => {
       console.log("cafkegiatan");
       var a = await API_KEGIATAN();
@@ -60,6 +71,7 @@ class FormInputDataKegiatan extends Component {
     }
     GETPKEGIATANMASJID();
     GETPKEGIATAN();
+    GETHARI();
     GETPEMATERI();
   }
   UNSAFE_componentWillMount() {
@@ -74,12 +86,17 @@ class FormInputDataKegiatan extends Component {
       console.log(e);
       this.setState({ kode_datakegiatan: e })
     }
+    const pilihhari = (e) => {
+      console.log(e);
+      this.setState({ hari_kegiatan: e })
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_KEGIATANMASJIDINSERT(this.state);
         console.log(resp);
         if (resp.status) {
           showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
         }
       }
       POST()
@@ -135,7 +152,10 @@ class FormInputDataKegiatan extends Component {
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Hari</Text>
-              <TextInput onFocus={(e) => this.setState({ modalVisible: true })} onChangeText={(w) => this.setState({ hari_kegiatan: w })} value={this.state.hari_kegiatan} placeholder='Masukkan hari' placeholderTextColor="grey" style={styles.txtinput} />
+              <View >
+                {
+                  <SelectInputNative lable="Pilih Hari" lebar={'100%'} selectedValue={this.state.hari_kegiatan} onSelectData={(e) => pilihhari(e)} data={this.state.hari} />
+                }</View>
             </View>
             <View>
               {
@@ -188,16 +208,17 @@ class FormInputDataKegiatan extends Component {
               }
             </View>
             <View style={{ marginBottom: 15 }}>
-              {
-              <Data />
 
-              }
 
             </View>
 
             <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpanx</Text>
+              <Text style={styles.button}>Simpan</Text>
             </TouchableOpacity>
+            {
+              <Data />
+
+            }
           </ScrollView>
         </View>
 
@@ -220,33 +241,33 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 16,
-  },
-  modalView: {
-    flex: 1,
-    width: '100%',
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    }, shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  centeredView: {
-    position: 'absolute',
-    display: 'flex',
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    width: '100%',
-    height: HEIGHT,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
+    },
+    modalView: {
+      flex: 1,
+      width: '100%',
+      margin: 20,
+      backgroundColor: "white",
+      borderRadius: 20,
+      padding: 35,
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2
+      }, shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5
+    },
+    centeredView: {
+      position: 'absolute',
+      display: 'flex',
+      backgroundColor: 'rgba(0,0,0,0.1)',
+      width: '100%',
+      height: HEIGHT,
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 22
+    },
   header: {
     flex: 1,
 

@@ -36,10 +36,10 @@ class ClassHIstory extends Component {
    
     return (
         <View>
-          <TouchableOpacity onLongPress={()=>this.props.onLongPress(this.props.data[0])} style={styles.HistoryCard}>
+          <TouchableOpacity onPress={()=>this.props.onPress(this.props.data)} onLongPress={()=>this.props.onLongPress(this.props.data[0])} style={styles.HistoryCard}>
             <Image style={styles.ImageCapture} source={{ uri: this.props.icon }} />
-            <Text style={styles.Title}> {this.props.data[1]} </Text>
-            <Text style={styles.label}> {this.props.data[0]} </Text>
+            <Text style={styles.Title}> {this.props.data[2]} </Text>
+            <Text style={styles.label}> {this.props.data[1]} </Text>
           </TouchableOpacity >
         </View>
       )

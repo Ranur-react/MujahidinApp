@@ -1,12 +1,53 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet,Linking} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {LogoMasjid} from '../../assets'
 import {ItemHome} from '../../components';
-
+import {API_DATAPROFIL,API_KEGIATANMASJID} from '../../utils/api';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 
 class HomePage extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      notelp_informasi:''
+    }
+  }
+  LoadData = () => {
+    const GETDATAPROFIL = async () => {
+      console.log("cafx");
+      var a = await API_DATAPROFIL();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request Porfil succes");
+        this.setState({ profil: a.data })
+        this.setState({ notelp_informasi: a.data[0].notelp_informasi })
+
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+    const GETPKEGIATAN = async () => {
+      console.log("cafkegiatan");
+      var a = await API_KEGIATANMASJID();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ kegiatan: a.data })
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+    GETPKEGIATAN();
+    GETDATAPROFIL();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
+ 
   render(){
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.LoadData();
+    });
     return(
       <View style = {styles.container}>
         <View style = {styles.header}>
@@ -14,12 +55,12 @@ class HomePage extends Component{
         <View style = {{marginLeft: 15}}>
           <Text style = {styles.txtmasjid}>Masjid Mujahidin</Text>
           <Text style = {styles.txtjalan}>Jl. Ir. H. Juanda No.79, Kec. Padang Barat</Text>
-          <Text style = {styles.txtjalan}>081277656154</Text>
+          <Text onPress={()=>Linking.openURL(`tel:${this.state.notelp_informasi}`)} style = {styles.txtjalan}>{this.state.notelp_informasi}</Text>
         </View>
         </View>
 
         <View style = {styles.konten}>
-          <ItemHome />
+          <ItemHome data={this.state} />
         </View>
       </View>
     )

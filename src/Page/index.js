@@ -15,8 +15,9 @@ import FormInputDataPenerimaDonasi from './FormInputDataPenerimaDonasi'
 import FormInputDataUangKeluar from './FormInputDataUangKeluar'
 import FormInputDataProfilMasjid from './FormInputDataProfilMasjid'
 import FormInputDataPemateri from './FormInputDataPemateri'
+import FormInputDataPemberianDonasi from './FormInputDataPemberianDonasi'
 
 export {Splash, HomePage, InputPage, UserPage, InputDataPage, LaporanPage, LoginPage, FormInputDataUser,
         FormInputDataKegiatan, FormInputDataDonatur, FormInputDataKategoriInfak, FormInputDataUangMasukDonasi,
         FormInputDataInfakKotakAmal, FormInputDataPenerimaDonasi, FormInputDataUangKeluar, FormInputDataProfilMasjid,
-        FormInputDataPemateri}
+        FormInputDataPemateri,FormInputDataPemberianDonasi}

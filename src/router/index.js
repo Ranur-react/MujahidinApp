@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {Splash, HomePage, InputPage, UserPage, InputDataPage, LaporanPage, LoginPage, FormInputDataUser,
+import {Splash, HomePage, InputPage, UserPage, InputDataPage, LaporanPage, LoginPage, FormInputDataUser,FormInputDataPemberianDonasi,
         FormInputDataKegiatan, FormInputDataDonatur, FormInputDataKategoriInfak, FormInputDataUangMasukDonasi,
         FormInputDataInfakKotakAmal, FormInputDataPenerimaDonasi, FormInputDataUangKeluar, FormInputDataProfilMasjid,
         FormInputDataPemateri} from '../Page';
@@ -36,6 +36,8 @@ class Router extends Component{
         <Stack.Screen name="FormInputDataKategoriInfak" component={FormInputDataKategoriInfak} options={{headerShown: false}} />
         <Stack.Screen name="FormInputDataUangMasukDonasi" component={FormInputDataUangMasukDonasi} options={{headerShown: false}} />
         <Stack.Screen name="FormInputDataInfakKotakAmal" component={FormInputDataInfakKotakAmal} options={{headerShown: false}} />
+        
+        <Stack.Screen name="FormInputDataPemberianDonasi" component={FormInputDataPemberianDonasi} options={{headerShown: false}} />
         <Stack.Screen name="FormInputDataPenerimaDonasi" component={FormInputDataPenerimaDonasi} options={{headerShown: false}} />
         <Stack.Screen name="FormInputDataUangKeluar" component={FormInputDataUangKeluar} options={{headerShown: false}} />
         <Stack.Screen name="FormInputDataProfilMasjid" component={FormInputDataProfilMasjid} options={{headerShown: false}} />

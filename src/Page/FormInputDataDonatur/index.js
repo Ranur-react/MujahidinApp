@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
-import { API_INPUTDONATUR,API_DONATURDELETE, API_DATADONATUR } from '../../utils/api';
+import { API_CARIDONATUR,API_INPUTDONATUR,API_DONATURDELETE, API_DATADONATUR } from '../../utils/api';
 import DataView from '../../components/_dataView';
 
 class FormInputDataDonatur extends Component {
@@ -24,7 +24,7 @@ class FormInputDataDonatur extends Component {
       console.log("cafx");
       var a = await API_DATADONATUR();
       if (a.status) {
-        showToastWithGravityAndOffset("Request pemateri succes");
+        showToastWithGravityAndOffset("Request Donatur succes");
         this.setState({ donatur: a.data })
         console.log(a);
       } else {
@@ -40,6 +40,24 @@ class FormInputDataDonatur extends Component {
 
 
   render() {
+    var caridata=(e)=>{
+      var SEARCH = async (x) => {
+        console.log("cafx");
+        var a = await API_CARIDONATUR(x);
+        if (a.status) {
+          if(a.data.length>0){
+            showToastWithGravityAndOffset("Pencarian Sukses, "+a.data.length+" Data Ditemukan");
+          }else{
+            showToastWithGravityAndOffset("Tidak Ada Data Ditemukan");
+          }
+          this.setState({ donatur: a.data })
+          console.log(a);
+        } else {
+          // showToastWithGravityAndOffset(a);
+        }
+      }
+      SEARCH(e)
+    }
     const hapus = (e) => {
       var POST = async (e) => {
         var resp = await API_DONATURDELETE(e);
@@ -118,6 +136,10 @@ class FormInputDataDonatur extends Component {
               <Text style={styles.button}>Simpan</Text>
             </TouchableOpacity>
             <View style={{ marginBottom: 15 }}>
+              {/* <Text style={styles.txtlabel}>Cari Donatur</Text> */}
+              <TextInput onChangeText={(w) => caridata(w)} placeholder='Cari Data' placeholderTextColor="grey" style={styles.txtcariInput} />
+            </View>
+            <View style={{ marginBottom: 15 }}>
             <Data />
           </View>
           </ScrollView>
@@ -160,7 +182,16 @@ const styles = StyleSheet.create({
     color: WARNA_TEKS,
     marginBottom: 5
   },
-
+  txtcariInput: {
+    fontFamily: 'Raleway-Medium',
+    fontSize: TEKS_SIZE + 2,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: WARNA_TEKS,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    color: WARNA_TEKS
+  },
   txtinput: {
     fontFamily: 'Raleway-Medium',
     fontSize: TEKS_SIZE + 2,

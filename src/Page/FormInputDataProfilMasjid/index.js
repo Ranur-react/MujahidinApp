@@ -2,43 +2,89 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
+import {API_profilmesjid,API_profilmesjidupdate,API_DATAUSER,API_DATAPROFIL} from '../../utils/api';
+import SelectInputNative from '../../components/_comboBox';
 
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 class FormInputDataProfilMasjid extends Component {
   constructor(props) {
     super(props);
     this.state = {
       secureTextEntry: true,
       iconName: 'eye',
-      notelpn_profilm: '',
-      namabnk_profilm: '',
-      norek_profilm: '',
-      idpenjawab_profilm: '',
+      notelp_informasi: '',
+      norek_informasi: '',
+      anrek_informasi: '',
+      bank_rekening: '',
+      id_penanggungjwb: '',
     }
   }
+  LoadData = () => {
+    const GETUSER = async () => {
+      console.log("cafx");
+      var a = await API_DATAUSER();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request User succes");
+        this.setState({ datauser: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a.toString());
+      }
+    }
+   
+    
+    const GETDATAPROFIL = async () => {
+      console.log("cafx");
+      var a = await API_DATAPROFIL();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request Porfil succes");
+        this.setState({ profil: a.data })
+        this.setState({ notelp_informasi: a.data[0].notelp_informasi })
+        this.setState({ norek_informasi: a.data[0].norek_informasi })
+        this.setState({ anrek_informasi: a.data[0].anrek_informasi })
+        this.setState({ bank_rekening: a.data[0].bank_rekening })
+        this.setState({ id_penanggungjwb: a.data[0].id_penanggungjwb })
 
-  render() {
-    const API_profilmesjid = async () => {
-      var e = this.state;
-      let dataReturn;
-      let formdata = new FormData();
-
-      formdata.append("notelpn_profilm", e.notelpn_profilm)
-      formdata.append("namabnk_profilm", e.namabnk_profilm)
-      formdata.append("norek_profilm", e.norek_profilm)
-      formdata.append("idpenjawab_profilm", e.idpenjawab_profilm)
-
-      let respond = await fetch("http://192.168.100.35/MujahidinApp/backendmujahiddinapp/dataprofilmesjid/insert.php", {
-        method: "POST",
-        headers: { 'Content-Type': "multipart/form-data" },
-        body: formdata,
-      }).then(response => response.json()).then(responseJson => {
-
-        console.log(responseJson);
-      }).catch(error => {
-        console.log(error);
-      });
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
     }
 
+    GETUSER();
+    GETDATAPROFIL();
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
+  }
+  render() {
+    const pilih= (e) => {
+      console.log(e);
+      this.setState({ id_penanggungjwb: e })
+    }
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_profilmesjid(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST()
+    }
+    const edit = () => {
+      console.log("Ediiiiiiit");
+      var POST = async () => {
+        var resp = await API_profilmesjidupdate(this.state);
+        console.log(resp);
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }
+      }
+      POST()
+    }
     return (
       <View style={styles.container}>
 
@@ -57,26 +103,40 @@ class FormInputDataProfilMasjid extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>No Telpon/WhatsApp</Text>
-              <TextInput onChangeText={(w)=> this.setState({notelpn_profilm:w})} placeholder='Masukkan no telpon/whatsapp' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w)=> this.setState({notelp_informasi:w})} value={this.state.notelp_informasi} placeholder='Masukkan no telpon/whatsapp' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama Bank</Text>
-              <TextInput onChangeText={(w)=> this.setState({namabnk_profilm:w})} placeholder='Masukkan nama bank' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w)=> this.setState({bank_rekening:w})} value={this.state.bank_rekening}  placeholder='Masukkan nama bank' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>No Rekening</Text>
-              <TextInput onChangeText={(w)=> this.setState({norek_profilm:w})} placeholder='Masukkan no rekening' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w)=> this.setState({norek_informasi:w})} value={this.state.norek_informasi}  placeholder='Masukkan no rekening' placeholderTextColor="grey" style={styles.txtinput} />
+            </View>
+            <View style={{ marginBottom: 15 }}>
+              <Text style={styles.txtlabel}>A.N Rekening</Text>
+              <TextInput onChangeText={(w)=> this.setState({anrek_informasi:w})} value={this.state.anrek_informasi}  placeholder='Masukkan no rekening' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id Penanggung Jawab</Text>
-              <TextInput onChangeText={(w)=> this.setState({idpenjawab_profilm:w})} placeholder='Masukkan id penanggung jawab' placeholderTextColor="grey" style={styles.txtinput} />
+              <View style={{ marginBottom: 15 }}>
+              {
+                <SelectInputNative lable="Pilih Pemateri" lebar={'100%'} selectedValue={this.state.id_penanggungjwb} onSelectData={(e) => pilih(e)} data={this.state.datauser} />
+              }
+            </View>
             </View>
 
-            <TouchableOpacity onPress={() =>API_profilmesjid()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={() =>{
+              if(this.state.notelp_informasi==''||!this.state.notelp_informasi||this.state.notelp_informasi==null||this.state.notelp_informasi==undefined){
+                simpan()
+              }else{
+                edit()
+              }
+            }} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.notelp_informasi==''||!this.state.notelp_informasi||this.state.notelp_informasi==null||this.state.notelp_informasi==undefined?'Simpan':'Update Perubahan'}</Text>
             </TouchableOpacity>
           </ScrollView>
         </View>

@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_user, API_DATAUSER,API_USERDELETE } from '../../utils/api';
+import { API_user, API_DATAUSER,API_DATALEVEL,API_USERDELETE } from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import DataView from '../../components/_dataView';
+import SelectInputNative from '../../components/_comboBox';
 
 class FormInputDataUser extends Component {
   constructor(props) {
@@ -21,6 +22,17 @@ class FormInputDataUser extends Component {
   }
 
   LoadData = () => {
+    const GETLEVEL = async () => {
+      console.log("cafLevel");
+      var a = await API_DATALEVEL();
+      if (a.status) {
+        showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ level: a.data })
+        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a.toString());
+      }
+    }
     const GETUSER = async () => {
       console.log("cafx");
       var a = await API_DATAUSER();
@@ -32,7 +44,7 @@ class FormInputDataUser extends Component {
         showToastWithGravityAndOffset(a.toString());
       }
     }
-
+    GETLEVEL();
     GETUSER();
   }
   UNSAFE_componentWillMount() {
@@ -41,6 +53,10 @@ class FormInputDataUser extends Component {
 
 
   render() {
+    const pilih= (e) => {
+      console.log(e);
+      this.setState({ level_user: e })
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_user(this.state);
@@ -119,7 +135,12 @@ class FormInputDataUser extends Component {
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Level</Text>
-              <TextInput onChangeText={(w) => this.setState({ level_user: w })} placeholder='Masukkan level user' placeholderTextColor="grey" style={styles.txtinput} />
+            
+              <View style={{ marginBottom: 15 }}>
+              {
+                <SelectInputNative lable="Pilih Pemateri" lebar={'100%'} selectedValue={this.state.level_user} onSelectData={(e) => pilih(e)} data={this.state.level} />
+              }
+            </View>
             </View>
 
             <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>

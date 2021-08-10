@@ -31,7 +31,9 @@ class InputPage extends Component{
   inputpenerimadonasi=()=>{
     this.props.navigation.navigate('FormInputDataPenerimaDonasi')
   }
-
+  inputdonasi=()=>{
+    this.props.navigation.navigate('FormInputDataPemberianDonasi')
+  }
   inputuangkeluar=()=>{
     this.props.navigation.navigate('FormInputDataUangKeluar')
   }
@@ -89,6 +91,10 @@ class InputPage extends Component{
           <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputpenerimadonasi}>
             <IconData />
             <Text style = {styles.text}>Data Penerima Donasi</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputdonasi}>
+            <IconData />
+            <Text style = {styles.text}>Data Donasi</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style = {styles.card} activeOpacity = {0.7} onPress = {this.inputuangkeluar}>
