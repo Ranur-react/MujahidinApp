@@ -4,12 +4,13 @@ import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS
 import { IconBack, IconData } from '../../assets'
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import DataView from '../../components/_dataView';
-import { API_PEMATERIINSERT, API_PEMATERI, API_PEMATERIDELETE } from '../../utils/api';
+import { API_PEMATERIINSERT,API_UPDATEDATAPEMATERI,API_CARIDATAPEMATERI, API_PEMATERI, API_PEMATERIDELETE } from '../../utils/api';
 class FormInputDataPemateri extends Component {
   constructor(props) {
     super(props);
     this.state = {
       secureTextEntry: true,
+      editmode:false,
       iconName: 'eye',
       kode_pemateri: '',
       nama_pemateri: '',
@@ -45,6 +46,55 @@ class FormInputDataPemateri extends Component {
       }
       POST()
     }
+    const edit=(w)=>{
+      console.log(w.kode_pemateri)
+      this.setState({
+        kode_pemateri:w.kode_pemateri,
+        nama_pemateri: w.nama_pemateri,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        kode_pemateri:'',
+        nama_pemateri: '',
+        editmode:false,
+
+      });
+    }
+    var caridata=(e)=>{
+      var SEARCH = async (x) => {
+        console.log("Cari . .");
+        var a = await API_CARIDATAPEMATERI(x);
+        if (a.status) {
+          if(a.data.length>0){
+            showToastWithGravityAndOffset("Pencarian Sukses, "+a.data.length+" Data Ditemukan");
+          }else{
+            showToastWithGravityAndOffset("Tidak Ada Data Ditemukan");
+          }
+          this.setState({ pemateri: a.data })
+          console.log(a);
+        } else {
+          // showToastWithGravityAndOffset(a);
+        }
+      }
+      SEARCH(e)
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATAPEMATERI(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
     const hapus = (e) => {
       var POST = async (e) => {
         var resp = await API_PEMATERIDELETE(e);
@@ -65,7 +115,7 @@ class FormInputDataPemateri extends Component {
             {
               this.state.pemateri.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)}  onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
@@ -90,17 +140,21 @@ class FormInputDataPemateri extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Kode Pemateri</Text>
-              <TextInput onChangeText={(w) => this.setState({ kode_pemateri: w })} placeholder='Masukkan kode pemateri' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onFocus={this.state.editmode?()=>reset():console.log('Simpan')} onChangeText={(w) => this.setState({ kode_pemateri: w })} placeholder='Masukkan kode pemateri' placeholderTextColor="grey" value={this.state.kode_pemateri} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama Pemateri</Text>
-              <TextInput onChangeText={(w) => this.setState({ nama_pemateri: w })} placeholder='Masukkan nama pemateri' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ nama_pemateri: w })} placeholder='Masukkan nama pemateri' placeholderTextColor="grey" value={this.state.nama_pemateri} style={styles.txtinput} />
             </View>
 
-            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
+            <View style={{ marginBottom: 15 }}>
+              {/* <Text style={styles.txtlabel}>Cari Donatur</Text> */}
+              <TextInput onChangeText={(w) => caridata(w)} placeholder='Cari Data' placeholderTextColor="grey" style={styles.txtcariInput} />
+            </View>
             <View style={{ marginBottom: 15 }} >
               <Text style={styles.txtlabel}>Daftar Pemateri</Text>
               <Data />
@@ -167,5 +221,15 @@ const styles = StyleSheet.create({
     color: 'white',
     elevation: 7,
     marginBottom: 30
-  }
+  },
+  txtcariInput: {
+    fontFamily: 'Raleway-Medium',
+    fontSize: TEKS_SIZE + 2,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: WARNA_TEKS,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    color: WARNA_TEKS
+  },
 })

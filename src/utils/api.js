@@ -265,6 +265,28 @@ export const API_CARIDATADONASI = async (res) => {
   dataReturn = respond;
   return dataReturn;
 }
+export const API_CARIDATAPEMATERI = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  // showToastWithGravityAndOffset("Search from : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/cari.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_CARIDONATUR = async (res) => {
   let dataReturn;
   let formdata = new FormData();
@@ -287,7 +309,6 @@ export const API_CARIDONATUR = async (res) => {
   dataReturn = respond;
   return dataReturn;
 }
-
 export const API_DONASIDELETE = async (res) => {
   let dataReturn;
   let formdata = new FormData();
@@ -653,6 +674,30 @@ export const API_kategori_infak =  async(res) => {
 //   dataReturn = respond;
 //   return dataReturn;
 // }
+ 
+export const API_UPDATEDATAPEMATERI = async (res) => {
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("kode_pemateri", e.kode_pemateri)
+  formdata.append("nama_pemateri", e.nama_pemateri)
+  showToastWithGravityAndOffset("POST : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_PEMATERIINSERT = async (res) => {
   var e = res;
   let dataReturn;

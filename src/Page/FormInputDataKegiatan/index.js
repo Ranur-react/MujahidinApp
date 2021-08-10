@@ -19,6 +19,7 @@ class FormInputDataKegiatan extends Component {
     this.state = {
       secureTextEntry: true,
       modalVisible: false,
+      editmode:false,
       iconName: 'eye',
       kode_kegiatan: '',
       nama_kegiatan: '',
@@ -90,6 +91,26 @@ class FormInputDataKegiatan extends Component {
       console.log(e);
       this.setState({ hari_kegiatan: e })
     }
+    const edit=(w)=>{
+      console.log(w.kode_datakegiatan)
+      this.setState({
+        kode_datakegiatan: w.kode_datakegiatan,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        kode_kegiatan: '',
+      nama_kegiatan: '',
+      kode_datakegiatan: '',
+      hari_kegiatan: '',
+      waktu_kegiatan: '',
+      idpematerikegiatan: '',
+        editmode:false,
+
+      });
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_KEGIATANMASJIDINSERT(this.state);
@@ -110,7 +131,7 @@ class FormInputDataKegiatan extends Component {
             {
               this.state.kegiatanMasjid.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)}  onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
