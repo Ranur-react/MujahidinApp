@@ -310,6 +310,50 @@ export const API_CARIDONATUR = async (res) => {
   return dataReturn;
 }
 
+export const API_INFAKMASUKDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataInfakKotakAmal/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
+export const API_DONMASUKDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangMasukDonasi/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_KEGIATANDELETE = async (res) => {
   let dataReturn;
   let formdata = new FormData();
@@ -624,6 +668,32 @@ export const API_INPUTDONATUR =  async(res) => {
   dataReturn = respond;
   return dataReturn;
 }
+
+export const API_UPDATEINFAKKOTAKAMAL = async (res)=>{
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_datainfak",e.id_datainfak )
+  formdata.append("tanggal_datainfak", e.tanggal_datainfak)
+  formdata.append("idkatgr_datainfak", e.idkatgr_datainfak)
+  formdata.append("jumlah_datainfak", e.jumlah_datainfak)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataInfakKotakAmal/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_INPUTDATAUANGMASUKINFAK = async (res)=>{
   var e=res;
   let dataReturn;
@@ -635,6 +705,33 @@ export const API_INPUTDATAUANGMASUKINFAK = async (res)=>{
   formdata.append("jumlah_datainfak", e.jumlah_datainfak)
 
   let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataInfakKotakAmal/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
+
+export const API_UPDATEDATAUANGMASUKDONASI =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_uangmasuk",e.id_uangmasuk )
+  formdata.append("tanggal_donmasuk", e.tanggal_donmasuk)
+  formdata.append("jumlah_donmasuk", e.jumlah)
+  formdata.append("iddon_donmasuk", e.iddon_donmasuk)
+  formdata.append("ket_donmasuk", e.ket_donmasuk)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataUangMasukDonasi/update.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,

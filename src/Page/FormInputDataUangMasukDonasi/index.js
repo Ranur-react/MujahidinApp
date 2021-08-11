@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, Platform, Modal, Dimensions, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
-import { API_DATADONATUR,API_INPUTDATAUANGMASUKDONASI,API_DATAUANGMASUK } from '../../utils/api';
+import { API_DATADONATUR,API_INPUTDATAUANGMASUKDONASI,API_DATAUANGMASUK,API_UPDATEDATAUANGMASUKDONASI,API_DONMASUKDELETE } from '../../utils/api';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import SelectInputNative from '../../components/_comboBox';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
@@ -77,12 +77,62 @@ class FormInputDataUangMasukDonasi extends Component {
             {
               this.state.uangmasuk.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView  onPress={(e)=>edit(e)}  onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
           </View>)
       }
+    }
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        id_uangmasuk: w.id_uangmasuk,
+        tanggal_donmasuk: w.tanggal_donmasuk,
+        iddon_donmasuk: w.iddon_donmasuk,
+        jumlah:w.jumlah,
+        ket_donmasuk: w.ket_donmasuk,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        id_uangmasuk: '',
+        tanggal_donmasuk: new Date().toISOString().slice(0, 10),
+        iddon_donmasuk: '',
+        jumlah:'',
+        ket_donmasuk: '',
+        editmode:false,
+
+      });
+    }
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_DONMASUKDELETE(e);
+
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST(e)
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATAUANGMASUKDONASI(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
     }
     return (
       <View style={styles.container}>
@@ -102,12 +152,12 @@ class FormInputDataUangMasukDonasi extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id Uang Masuk</Text>
-              <TextInput onChangeText={(e)=>this.setState({id_uangmasuk:e})} placeholder='Masukkan id uang masuk' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput  onFocus={this.state.editmode?()=>reset():console.log('Simpan')} onChangeText={(e)=>this.setState({id_uangmasuk:e})} placeholder='Masukkan id uang masuk'  value={this.state.id_uangmasuk} placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Tanggal</Text>
-              <TextInput placeholder='Masukkan tanggal' onFocus={(e) => this.setState({ modalVisible: true })} value={this.state.tanggal_donmasuk} placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.tanggal_donmasuk} placeholder='Masukkan tanggal' onFocus={(e) => this.setState({ modalVisible: true })} value={this.state.tanggal_donmasuk} placeholderTextColor="grey" style={styles.txtinput} />
             </View>
             <View>
               {
@@ -165,17 +215,17 @@ class FormInputDataUangMasukDonasi extends Component {
             </View> */}
 
             <View style={{ marginBottom: 15 }}>
-              <Text style={styles.txtlabel}>Jumlah (Rp)</Text>
-              <TextInput onChangeText={(e)=>this.setState({jumlah:e})} placeholder='Masukkan jumlah uang' placeholderTextColor="grey" style={styles.txtinput} />
+              <Text  style={styles.txtlabel}>Jumlah (Rp)</Text>
+              <TextInput value={this.state.jumlah} onChangeText={(e)=>this.setState({jumlah:e})} placeholder='Masukkan jumlah uang' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Keterangan</Text>
-              <TextInput onChangeText={(e)=>this.setState({ket_donmasuk:e})} placeholder='Masukkan keterangan' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.ket_donmasuk} onChangeText={(e)=>this.setState({ket_donmasuk:e})} placeholder='Masukkan keterangan' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
-            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
 
            <View>

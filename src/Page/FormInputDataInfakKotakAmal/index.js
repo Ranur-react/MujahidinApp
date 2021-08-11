@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View,Platform, Text, StyleSheet,Modal, TouchableOpacity, Dimensions,ScrollView, TextInput} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData} from '../../assets';
-import {  API_DATAKATEGORIINFAK,API_DATAUANGMASUKINFAK,API_INPUTDATAUANGMASUKINFAK} from '../../utils/api';
+import {  API_DATAKATEGORIINFAK,API_DATAUANGMASUKINFAK,API_INPUTDATAUANGMASUKINFAK,API_INFAKMASUKDELETE,API_UPDATEINFAKKOTAKAMAL} from '../../utils/api';
 import SelectInputNative from '../../components/_comboBox';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
@@ -25,7 +25,7 @@ class FormInputDataInfakKotakAmal extends Component{
       console.log("cafx");
       var a = await API_DATAKATEGORIINFAK();
       if (a.status) {
-        showToastWithGravityAndOffset("Request pemateri succes");
+        // showToastWithGravityAndOffset("Request pemateri succes");
         this.setState({ datainfakkategori: a.data })
         console.log(a);
       } else {
@@ -36,7 +36,7 @@ class FormInputDataInfakKotakAmal extends Component{
       console.log("cafx");
       var a = await API_DATAUANGMASUKINFAK();
       if (a.status) {
-        showToastWithGravityAndOffset("Request pemateri succes");
+        showToastWithGravityAndOffset("Load Success");
         this.setState({ datainfak: a.data })
         console.log(a);
       } else {
@@ -49,8 +49,57 @@ class FormInputDataInfakKotakAmal extends Component{
   UNSAFE_componentWillMount() {
     this.LoadData();
   }
+  
 
   render(){
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEINFAKKOTAKAMAL(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        id_datainfak:w.id_datainfak,
+        tanggal_datainfak: w.tanggal_datainfak,
+        idkatgr_datainfak:w.idkatgr_datainfak,
+        jumlah_datainfak:w.jumlah_datainfak,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        id_datainfak:'',
+        tanggal_datainfak: new Date().toISOString().slice(0, 10),
+        idkatgr_datainfak:'',
+        jumlah_datainfak:'',
+        editmode:false,
+
+      });
+    }
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_INFAKMASUKDELETE(e);
+
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST(e)
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_INPUTDATAUANGMASUKINFAK(this.state);
@@ -72,7 +121,7 @@ class FormInputDataInfakKotakAmal extends Component{
             {
               this.state.datainfak.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)} onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
@@ -100,7 +149,7 @@ class FormInputDataInfakKotakAmal extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Id Infak</Text>
-            <TextInput onChangeText={(e)=>this.setState({id_datainfak:e})} placeholder = 'Masukkan id infak' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput  onFocus={this.state.editmode?()=>reset():console.log('Simpan')} onChangeText={(e)=>this.setState({id_datainfak:e})} placeholder = 'Masukkan id infak' value={this.state.id_datainfak} placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style={{ marginBottom: 15 }}>
@@ -158,12 +207,12 @@ class FormInputDataInfakKotakAmal extends Component{
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Jumlah (Rp)</Text>
-            <TextInput onChangeText={(e)=>this.setState({jumlah_datainfak:e})} placeholder = 'Masukkan jumlah uang' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput value={this.state.jumlah_datainfak} onChangeText={(e)=>this.setState({jumlah_datainfak:e})} placeholder = 'Masukkan jumlah uang' placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity onPress={()=>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
-            <Text style = {styles.button}>Simpan</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
+            </TouchableOpacity>
           <View>
           <Data/>
           </View>
