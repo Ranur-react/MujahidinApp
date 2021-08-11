@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
-import { API_CARIDONATUR,API_INPUTDONATUR,API_DONATURDELETE, API_DATADONATUR } from '../../utils/api';
+import { API_CARIDONATUR,API_INPUTDONATUR,API_DONATURDELETE, API_DATADONATUR,API_UPDATEDATADONATUR } from '../../utils/api';
 import DataView from '../../components/_dataView';
 
 class FormInputDataDonatur extends Component {
@@ -11,6 +11,7 @@ class FormInputDataDonatur extends Component {
     super(props);
     this.state = {
       secureTextEntry: true,
+      editmode:false,
       iconName: 'eye',
       kode_datadonatur: '',
       nama_datadonatur: '',
@@ -40,6 +41,27 @@ class FormInputDataDonatur extends Component {
 
 
   render() {
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        kode_datadonatur: w.kode_datadonatur,
+        nama_datadonatur: w.nama_datadonatur,
+        alamat_donatur: w.alamat_donatur,
+        nohp_donatur: w.nohp_donatur,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        kode_datadonatur: '',
+        nama_datadonatur: '',
+        alamat_donatur: '',
+        nohp_donatur: '',
+        editmode:false,
+
+      });
+    }
     var caridata=(e)=>{
       var SEARCH = async (x) => {
         console.log("cafx");
@@ -78,12 +100,26 @@ class FormInputDataDonatur extends Component {
             {
               this.state.donatur.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)} onLongPress={(e) => hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
           </View>)
       }
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATADONATUR(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
     }
     const simpan = () => {
       var POST = async () => {
@@ -114,26 +150,26 @@ class FormInputDataDonatur extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Kode Donatur</Text>
-              <TextInput onChangeText={(w) => this.setState({ kode_datadonatur: w })} placeholder='Masukkan kode donatur' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onFocus={this.state.editmode?()=>reset():console.log('Simpan')} onChangeText={(w) => this.setState({ kode_datadonatur: w })} placeholder='Masukkan kode donatur' placeholderTextColor="grey" value={this.state.kode_datadonatur} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama Donatur</Text>
-              <TextInput onChangeText={(w) => this.setState({ nama_datadonatur: w })} placeholder='Masukkan nama donatur' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ nama_datadonatur: w })} value={this.state.nama_datadonatur} placeholder='Masukkan nama donatur' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Alamat Donatur</Text>
-              <TextInput onChangeText={(w) => this.setState({ alamat_donatur: w })} placeholder='Masukkan alamat donatur' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.alamat_donatur} onChangeText={(w) => this.setState({ alamat_donatur: w })} placeholder='Masukkan alamat donatur' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>No Handphone</Text>
-              <TextInput onChangeText={(w) => this.setState({ nohp_donatur: w })} placeholder='Masukkan no handphone' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.nohp_donatur} onChangeText={(w) => this.setState({ nohp_donatur: w })} placeholder='Masukkan no handphone' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
-            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
             <View style={{ marginBottom: 15 }}>
               {/* <Text style={styles.txtlabel}>Cari Donatur</Text> */}

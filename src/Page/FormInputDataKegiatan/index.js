@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, Platform, StyleSheet, TouchableOpacity, Modal, ScrollView, TextInput, Dimensions } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_KEGIATANMASJID, API_KEGIATANMASJIDINSERT, API_PEMATERI, API_KEGIATAN, API_DATAHARI } from '../../utils/api';
+import { API_KEGIATANMASJID, API_KEGIATANMASJIDINSERT, API_PEMATERI, API_KEGIATAN, API_DATAHARI,API_UPDATEDATAKEGIATANMASJID ,API_KEGIATANDELETE} from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import SelectInputNative from '../../components/_comboBox';
@@ -21,6 +21,7 @@ class FormInputDataKegiatan extends Component {
       modalVisible: false,
       editmode:false,
       iconName: 'eye',
+      no_datakegtn:'',
       kode_kegiatan: '',
       nama_kegiatan: '',
       kode_datakegiatan: '',
@@ -95,6 +96,11 @@ class FormInputDataKegiatan extends Component {
       console.log(w.kode_datakegiatan)
       this.setState({
         kode_datakegiatan: w.kode_datakegiatan,
+        no_datakegtn:w.no_datakegtn,
+        kode_kegiatan: w.kode_kegiatan,
+        hari_kegiatan: w.hari_datakegiatan,
+        waktu_kegiatan: w.waktu_datakegiatan,
+        idpematerikegiatan: w.id_datapemateri,
         editmode:true,
 
       });
@@ -110,6 +116,32 @@ class FormInputDataKegiatan extends Component {
         editmode:false,
 
       });
+    }
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_KEGIATANDELETE(e);
+
+        if (resp.status) {
+          showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }
+      }
+      POST(e)
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATAKEGIATANMASJID(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
     }
     const simpan = () => {
       var POST = async () => {
@@ -166,7 +198,7 @@ class FormInputDataKegiatan extends Component {
             </View>
             <View>
               {
-                <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'} selectedValue={this.state.kode_datakegiatan} onSelectData={(e) => pilihKegiatan(e)} data={this.state.kegiatan} />
+                <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'}  selectedValue={this.state.kode_datakegiatan} onSelectData={(e) => pilihKegiatan(e)} data={this.state.kegiatan} />
 
               }
             </View>
@@ -216,7 +248,7 @@ class FormInputDataKegiatan extends Component {
             </View>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Waktu</Text>
-              <TextInput onChangeText={(w) => this.setState({ waktu_kegiatan: w })} placeholder='Masukkan waktu' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ waktu_kegiatan: w })} placeholder='Masukkan waktu' placeholderTextColor="grey" value={this.state.waktu_kegiatan} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
@@ -233,9 +265,14 @@ class FormInputDataKegiatan extends Component {
 
             </View>
 
-            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
+           {this.state.editmode?
+           <TouchableOpacity onPress={()=>reset()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+           <Text style={styles.buttonReset}>Batal Edit</Text>
+         </TouchableOpacity>:null 
+          }
             {
               <Data />
 
@@ -324,7 +361,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     color: WARNA_TEKS
   },
-
+  buttonReset: {
+    backgroundColor: 'white',
+    textAlign: 'center',
+    width: 140,
+    padding: 10,
+    borderRadius: 10,
+    fontWeight: 'bold',
+    fontSize: TEKS_SIZE + 3,
+    color: 'black',
+    elevation: 7,
+    marginBottom: 30
+  },
   button: {
     backgroundColor: WARNA_UTAMA,
     textAlign: 'center',

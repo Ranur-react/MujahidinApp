@@ -3,7 +3,7 @@ import { showToastWithGravityAndOffset } from '../components/_Toasview';
 //GET] 
 export const API_DATADONASI=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datadonasi/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -19,7 +19,7 @@ export const API_DATADONASI=async()=>{
 }
 export const API_DATAJENISPENERIMA=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataJenisPenerima/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -35,7 +35,7 @@ export const API_DATAJENISPENERIMA=async()=>{
 }
 export const API_DATALEVEL=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/level.php", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -51,7 +51,7 @@ export const API_DATALEVEL=async()=>{
 }
 export const API_DATAHARI=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataHari/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -67,7 +67,7 @@ export const API_DATAHARI=async()=>{
 }
 export const API_DATAPROFIL=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataprofilmesjid/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -83,7 +83,7 @@ export const API_DATAPROFIL=async()=>{
 }
 export const API_DATAUSER=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -99,7 +99,7 @@ export const API_DATAUSER=async()=>{
 }
 export const API_DATAUANGKELUARLAINNYA=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangKeluarLainnya/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -115,7 +115,7 @@ export const API_DATAUANGKELUARLAINNYA=async()=>{
 }
 export const API_DATAPENERIMA=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPenerima/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -131,7 +131,7 @@ export const API_DATAPENERIMA=async()=>{
 }
 export const API_DATAUANGMASUKINFAK=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataInfakKotakAmal/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -147,7 +147,7 @@ export const API_DATAUANGMASUKINFAK=async()=>{
 }
 export const API_DATAUANGMASUK=async()=>{
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangMasukDonasi/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -163,7 +163,7 @@ export const API_DATAUANGMASUK=async()=>{
 }
 export const API_DATAKATEGORIINFAK = async () => {
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakategoriinfak/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -180,7 +180,7 @@ export const API_DATAKATEGORIINFAK = async () => {
 
 export const API_DATADONATUR = async () => {
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datadonatur/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -196,7 +196,7 @@ export const API_DATADONATUR = async () => {
 }
 export const API_KEGIATANMASJID = async () => {
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakegiatanmesjid/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -212,7 +212,7 @@ export const API_KEGIATANMASJID = async () => {
 }
 export const API_KEGIATAN = async () => {
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataKegiatan/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -228,7 +228,7 @@ export const API_KEGIATAN = async () => {
 }
 export const API_PEMATERI = async () => {
   let dataReturn;
-  showToastWithGravityAndOffset("GET : " + BASE_URL)
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
@@ -295,6 +295,29 @@ export const API_CARIDONATUR = async (res) => {
   formdata.append("key", res)
   // showToastWithGravityAndOffset("Search from : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datadonatur/cari.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
+
+export const API_KEGIATANDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakegiatanmesjid/delete.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
@@ -456,7 +479,7 @@ export const API_KATEGORIINFAKDELETE=async(res)=>{
   console.log("Data yang akan dikirm ke api");
   console.log(res);
   formdata.append("kodkatgr_infak", res)
-  showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  // showToastWithGravityAndOffset("DELETE : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakategoriinfak/delete.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
@@ -550,6 +573,32 @@ export const API_INPDATAUANGKELUARLAINNYA =  async(res) => {
   dataReturn = respond;
   return dataReturn;
 }
+
+export const API_UPDATEDATADONATUR =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("kode_datadonatur",e.kode_datadonatur )
+  formdata.append("nama_datadonatur", e.nama_datadonatur)
+  formdata.append("alamat_donatur", e.alamat_donatur)
+  formdata.append("nohp_donatur", e.nohp_donatur)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datadonatur/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_INPUTDONATUR =  async(res) => {
   var e=res;
   let dataReturn;
@@ -626,6 +675,30 @@ export const API_INPUTDATAUANGMASUKDONASI =  async(res) => {
   dataReturn = respond;
   return dataReturn;
 }
+
+export const API_UPDATEDATAKATEGORI =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("kodkatgr_infak",e.kodkatgr_infak )
+  formdata.append("namakatgr_infak", e.namakatgr_infak)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datakategoriinfak/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_kategori_infak =  async(res) => {
   var e=res;
   let dataReturn;
@@ -682,7 +755,7 @@ export const API_UPDATEDATAPEMATERI = async (res) => {
 
   formdata.append("kode_pemateri", e.kode_pemateri)
   formdata.append("nama_pemateri", e.nama_pemateri)
-  showToastWithGravityAndOffset("POST : " + BASE_URL)
+  // showToastWithGravityAndOffset("POST : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPemateri/update.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
@@ -732,7 +805,7 @@ export const API_user = async (res) => {
   formdata.append("username_user", e.username_user)
   formdata.append("password_user", e.password_user)
   formdata.append("level_user", e.level_user)
-  showToastWithGravityAndOffset("POST : " + BASE_URL)
+  // showToastWithGravityAndOffset("POST : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/insert.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
@@ -760,6 +833,34 @@ export const API_INPUTDATAPENERIMA =async(res)=>{
   formdata.append("nohp_penerima", e.nohp_penerima)
 
   let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataPenerima/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    showToastWithGravityAndOffset(error)
+    return error
+  });
+  
+  dataReturn = respond;
+  return dataReturn;
+}
+
+export const API_UPDATEDATAKEGIATANMASJID = async (res) => {
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("no_datakegtn", e.no_datakegtn)
+  formdata.append("kode_datakegiatan", e.kode_datakegiatan)
+  formdata.append("hari_kegiatan", e.hari_kegiatan)
+  formdata.append("waktu_kegiatan", e.waktu_kegiatan)
+  formdata.append("idpematerikegiatan", e.idpematerikegiatan)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/datakegiatanmesjid/update.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
