@@ -3,7 +3,7 @@ import {View, Text, StyleSheet,Linking} from 'react-native';
 import {WARNA_UTAMA, WARNA_DISABLE, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {LogoMasjid} from '../../assets'
 import {ItemHome} from '../../components';
-import {API_DATAPROFIL,API_KEGIATANMASJID} from '../../utils/api';
+import {API_DATAPROFIL,API_KEGIATANMASJID,API_DATAJADWALSHOLAT} from '../../utils/api';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 
 class HomePage extends Component{
@@ -15,28 +15,43 @@ class HomePage extends Component{
   }
   LoadData = () => {
     const GETDATAPROFIL = async () => {
-      console.log("cafx");
       var a = await API_DATAPROFIL();
       if (a.status) {
-        showToastWithGravityAndOffset("Request Porfil succes");
+        // showToastWithGravityAndOffset("Request Porfil succes");
         this.setState({ profil: a.data })
+        this.setState({ 
+          InfakInfo:{
+            datahariini: a.datahariini,
+            databulanini: a.databulanini,
+          } })
+        
         this.setState({ notelp_informasi: a.data[0].notelp_informasi })
-
-        console.log(a);
+      } else {
+        showToastWithGravityAndOffset(a);
+      }
+    }
+    const GETJADWALSHOLAT = async () => {
+      console.log("Get Data Jadwal Sholat  ");
+      var a = await API_DATAJADWALSHOLAT();
+      console.log(a.results.datetime[0].times);
+      if (a.status) {
+        // showToastWithGravityAndOffset("Request pemateri succes");
+        this.setState({ jadwalsholat: a.results.datetime[0] })
       } else {
         showToastWithGravityAndOffset(a);
       }
     }
     const GETPKEGIATAN = async () => {
-      console.log("cafkegiatan");
+      console.log("Get Data kegiatan ");
       var a = await API_KEGIATANMASJID();
       if (a.status) {
-        showToastWithGravityAndOffset("Request pemateri succes");
+        // showToastWithGravityAndOffset("Request pemateri succes");
         this.setState({ kegiatan: a.data })
       } else {
         showToastWithGravityAndOffset(a);
       }
     }
+    GETJADWALSHOLAT();
     GETPKEGIATAN();
     GETDATAPROFIL();
   }

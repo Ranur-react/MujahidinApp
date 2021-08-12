@@ -6,7 +6,7 @@ import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import DataView from '../../components/_dataView';
 import SelectInputNative from '../../components/_comboBox';
-
+ 
 class FormInputDataUser extends Component {
   constructor(props) {
     super(props);
@@ -90,12 +90,35 @@ class FormInputDataUser extends Component {
             {
               this.state.datauser.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)} onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
           </View>)
       }
+    }
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        kode_user: w.kode_user,
+        nama_user: w.nama_user,
+        username_user: w.username_user,
+        password_user: w.password_user,
+        level_user: w.level_user,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        kode_user: '',
+        nama_user: '',
+        username_user: '',
+        password_user: '',
+        level_user: '',
+        editmode:false,
+
+      });
     }
     return (
       <View style={styles.container}>
@@ -115,22 +138,22 @@ class FormInputDataUser extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id User</Text>
-              <TextInput onChangeText={(w) => this.setState({ kode_user: w })} placeholder='Masukkan id user' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onChangeText={(w) => this.setState({ kode_user: w })} placeholder='Masukkan id user' placeholderTextColor="grey" value={this.state.kode_user} onFocus={this.state.editmode?()=>reset():console.log('Simpan')} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama User</Text>
-              <TextInput onChangeText={(w) => this.setState({ nama_user: w })} placeholder='Masukkan nama user' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.nama_user} onChangeText={(w) => this.setState({ nama_user: w })} placeholder='Masukkan nama user' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Username</Text>
-              <TextInput onChangeText={(w) => this.setState({ username_user: w })} placeholder='Masukkan username' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.username_user} onChangeText={(w) => this.setState({ username_user: w })} placeholder='Masukkan username' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Password</Text>
-              <TextInput onChangeText={(w) => this.setState({ password_user: w })} placeholder='Masukkan password' placeholderTextColor="grey" secureTextEntry={this.state.secureTextEntry} style={styles.txtinput} />
+              <TextInput value={this.state.password_user} onChangeText={(w) => this.setState({ password_user: w })} placeholder='Masukkan password' placeholderTextColor="grey" secureTextEntry={this.state.secureTextEntry} style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
@@ -143,9 +166,10 @@ class FormInputDataUser extends Component {
             </View>
             </View>
 
-            <TouchableOpacity onPress={() => simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
+          <Data/>
             <Data />
           </ScrollView>
         </View>

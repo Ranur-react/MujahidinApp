@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { IconBack, IconData } from '../../assets'
-import { API_INPUTDATAPENERIMA,API_DATAPENERIMA } from '../../utils/api';
+import { API_INPUTDATAPENERIMA,API_DATAPENERIMA,API_UPDATEDATAPENERIMA,API_DATAPENERIMADONASIDELETE } from '../../utils/api';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import DataView from '../../components/_dataView';
 
@@ -36,6 +36,33 @@ class FormInputDataPenerimaDonasi extends Component {
     this.LoadData();
   }
   render() {
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_DATAPENERIMADONASIDELETE(e);
+
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST(e)
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATAPENERIMA(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
     const Data = () => {
       if (!this.state.penerima) {
         return (<View></View>)
@@ -45,12 +72,33 @@ class FormInputDataPenerimaDonasi extends Component {
             {
               this.state.penerima.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)} onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
           </View>)
       }
+    }
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        id_dataspenerima: w.id_dataspenerima,
+        nama_penerima: w.nama_penerima,
+        alamat_penerima: w.alamat_penerima,
+        nohp_penerima: w.nohp_penerima,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        id_dataspenerima: '',
+        nama_penerima: '',
+        alamat_penerima: '',
+        nohp_penerima: '',
+        editmode:false,
+
+      });
     }
     const simpan = () => {
       var POST = async () => {
@@ -81,28 +129,28 @@ class FormInputDataPenerimaDonasi extends Component {
           <ScrollView style={{ marginTop: 30, marginHorizontal: 20 }}>
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Id Penerima Donasi</Text>
-              <TextInput onChangeText={(w) => this.setState({ id_dataspenerima: w })} placeholder='Masukkan id penerima donasi' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput onFocus={this.state.editmode?()=>reset():console.log('Simpan')} value={this.state.id_dataspenerima} onChangeText={(w) => this.setState({ id_dataspenerima: w })} placeholder='Masukkan id penerima donasi' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Nama Penerima</Text>
-              <TextInput onChangeText={(w) => this.setState({ nama_penerima: w })} placeholder='Masukkan nama penerima' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput  value={this.state.nama_penerima} onChangeText={(w) => this.setState({ nama_penerima: w })} placeholder='Masukkan nama penerima' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>Alamat</Text>
-              <TextInput onChangeText={(w) => this.setState({ alamat_penerima: w })} placeholder='Masukkan alamat' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.alamat_penerima} onChangeText={(w) => this.setState({ alamat_penerima: w })} placeholder='Masukkan alamat' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
             <View style={{ marginBottom: 15 }}>
               <Text style={styles.txtlabel}>No Handphone</Text>
-              <TextInput onChangeText={(w) => this.setState({ nohp_penerima: w })} placeholder='Masukkan no handphone' placeholderTextColor="grey" style={styles.txtinput} />
+              <TextInput value={this.state.nohp_penerima} onChangeText={(w) => this.setState({ nohp_penerima: w })} placeholder='Masukkan no handphone' placeholderTextColor="grey" style={styles.txtinput} />
             </View>
 
-            <TouchableOpacity onPress={()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={styles.button}>Simpan</Text>
+            <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
             </TouchableOpacity>
             <Data/>
           </ScrollView>

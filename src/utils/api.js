@@ -1,13 +1,29 @@
 import { BASE_URL } from './constant';
 import { showToastWithGravityAndOffset } from '../components/_Toasview';
 //GET] 
+export const API_DATAJADWALSHOLAT=async()=>{
+  let dataReturn;
+  // showToastWithGravityAndOffset("GET : " + BASE_URL)
+  let respond = await fetch("https://api.pray.zone/v2/times/today.json?city=padang", {
+    method: "GET",
+  }).then(response => response.json()).then(responseJson => {
+    // console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn; 
+}
 export const API_DATADONASI=async()=>{
   let dataReturn;
   // showToastWithGravityAndOffset("GET : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datadonasi/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
-    console.log(responseJson);
+    // console.log(responseJson);
     return responseJson
   }).catch(error => {
     console.log(error);
@@ -71,7 +87,7 @@ export const API_DATAPROFIL=async()=>{
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataprofilmesjid/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
-    console.log(responseJson);
+    // console.log(responseJson);
     return responseJson
   }).catch(error => {
     console.log(error);
@@ -200,7 +216,7 @@ export const API_KEGIATANMASJID = async () => {
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/datakegiatanmesjid/", {
     method: "GET",
   }).then(response => response.json()).then(responseJson => {
-    console.log(responseJson);
+    // console.log(responseJson);
     return responseJson
   }).catch(error => {
     console.log(error);
@@ -310,6 +326,28 @@ export const API_CARIDONATUR = async (res) => {
   return dataReturn;
 }
 
+export const API_DATAUANGKELUARLAINNYADELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangKeluarLainnya/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_INFAKMASUKDELETE = async (res) => {
   let dataReturn;
   let formdata = new FormData();
@@ -340,6 +378,29 @@ export const API_DONMASUKDELETE = async (res) => {
   formdata.append("key", res)
   ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
   let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataUangMasukDonasi/delete.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
+
+export const API_DATAPENERIMADONASIDELETE = async (res) => {
+  let dataReturn;
+  let formdata = new FormData();
+  console.log("Data yang akan dikirm ke api");
+  console.log(res);
+  formdata.append("key", res)
+  ////showToastWithGravityAndOffset("DELETE : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/dataPenerima/delete.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
@@ -578,6 +639,32 @@ export const API_INPUTDATADONASI =  async(res) => {
   formdata.append("jumlah_donasi", e.jumlah_donasi)
 
   let respond = await fetch(BASE_URL+"backendmujahiddinapp/datadonasi/insert.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+  dataReturn = respond;
+  return dataReturn;
+}
+
+export const API_UPDATEATAUANGKELUARLAINNYA =  async(res) => {
+  var e=res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_keluar",e.id_keluar )
+  formdata.append("tanggal_keluar", e.tanggal_keluar)
+  formdata.append("uraian_keluar", e.uraian_keluar)
+  formdata.append("jumlah_keluar", e.jumlah_keluar)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataUangKeluarLainnya/update.php", {
     method: "POST",
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
@@ -892,6 +979,32 @@ export const API_PEMATERIINSERT = async (res) => {
   return dataReturn;
 }
 
+export const API_UPDATEDATAUSER = async (res) => {
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("kode_user", e.kode_user)
+  formdata.append("nama_user", e.nama_user)
+  formdata.append("username_user", e.username_user)
+  formdata.append("password_user", e.password_user)
+  formdata.append("level_user", e.level_user)
+  // showToastWithGravityAndOffset("POST : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/datauser/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_user = async (res) => {
   var e = res;
   let dataReturn;
@@ -919,6 +1032,32 @@ export const API_user = async (res) => {
   return dataReturn;
 }
 
+export const API_UPDATEDATAPENERIMA =async(res)=>{
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("id_dataspenerima", e.id_dataspenerima)
+  formdata.append("nama_penerima", e.nama_penerima)
+  formdata.append("alamat_penerima", e.alamat_penerima)
+  formdata.append("nohp_penerima", e.nohp_penerima)
+
+  let respond = await fetch(BASE_URL+"backendmujahiddinapp/dataPenerima/update.php", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    showToastWithGravityAndOffset(error)
+    return error
+  });
+  
+  dataReturn = respond;
+  return dataReturn;
+}
 export const API_INPUTDATAPENERIMA =async(res)=>{
   var e = res;
   let dataReturn;
@@ -988,7 +1127,7 @@ export const API_KEGIATANMASJIDINSERT = async (res) => {
     headers: { 'Content-Type': "multipart/form-data" },
     body: formdata,
   }).then(response => response.json()).then(responseJson => {
-    console.log(responseJson);
+    // console.log(responseJson);
     return responseJson
   }).catch(error => {
     console.log(error);

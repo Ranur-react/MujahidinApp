@@ -6,7 +6,7 @@ import SelectInputNative from '../../components/_comboBox';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import { Picker, DatePicker } from 'react-native-wheel-pick';
 import DataView from '../../components/_dataView';
-import {  API_INPDATAUANGKELUARLAINNYA,API_DATAUANGKELUARLAINNYA} from '../../utils/api';
+import {  API_INPDATAUANGKELUARLAINNYA,API_DATAUANGKELUARLAINNYA,API_DATAUANGKELUARLAINNYADELETE,API_UPDATEATAUANGKELUARLAINNYA} from '../../utils/api';
 const isIos = Platform.OS === 'ios';
 
 class FormInputDataUangKeluar extends Component{
@@ -26,7 +26,7 @@ class FormInputDataUangKeluar extends Component{
       console.log("cafx");
       var a = await API_DATAUANGKELUARLAINNYA();
       if (a.status) {
-        showToastWithGravityAndOffset("Request pemateri succes");
+        showToastWithGravityAndOffset("Load succes");
         this.setState({ datauangkeluar: a.data })
         console.log(a);
       } else {
@@ -41,14 +41,44 @@ class FormInputDataUangKeluar extends Component{
   }
   
   render(){
+    const hapus = (e) => {
+      var POST = async (e) => {
+        var resp = await API_DATAUANGKELUARLAINNYADELETE(e);
+
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST(e)
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEATAUANGKELUARLAINNYA(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
+    }
     const simpan = () => {
       var POST = async () => {
         var resp = await API_INPDATAUANGKELUARLAINNYA(this.state);
         console.log("---UANG MASUK---");
         console.log(resp);
         if (resp.status) {
-          showToastWithGravityAndOffset(resp.pesan);
+          // showToastWithGravityAndOffset(resp.pesan);
           this.LoadData();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+
         }
       }
       POST()
@@ -62,12 +92,33 @@ class FormInputDataUangKeluar extends Component{
             {
               this.state.datauangkeluar.map((value, i) => {
                 return (
-                  <DataView onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
+                  <DataView onPress={(e)=>edit(e)} onLongPress={(e)=>hapus(e)} key={i} icon={"https://qurancall.id/images/pengajar_icon.png"} data={value} />
                 )
               })
             }
           </View>)
       }
+    }
+    const edit=(w)=>{
+      console.log(w)
+      this.setState({
+        id_keluar: w.id_keluar,
+        tanggal_keluar: w.tanggal_keluar,
+        uraian_keluar: w.uraian_keluar,
+        jumlah_keluar: w.jumlah_keluar,
+        editmode:true,
+
+      });
+    }
+    const reset=()=>{
+      this.setState({
+        id_keluar: '',
+        tanggal_keluar: new Date().toISOString().slice(0, 10),
+        uraian_keluar: '',
+        jumlah_keluar: '',
+        editmode:false,
+
+      });
     }
     return(
       <View style = {styles.container}>
@@ -87,7 +138,7 @@ class FormInputDataUangKeluar extends Component{
         <ScrollView style = {{marginTop: 30, marginHorizontal: 20}}>
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Id Uang Keluar</Text>
-            <TextInput keyboardType = 'numeric' placeholder = 'Masukkan id uang keluar' onChangeText={(w)=> this.setState({id_keluar:w})} placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onFocus={this.state.editmode?()=>reset():console.log('Simpan')} keyboardType = 'numeric' placeholder = 'Masukkan id uang keluar' onChangeText={(w)=> this.setState({id_keluar:w})} placeholderTextColor = "grey" value={this.state.id_keluar} style = {styles.txtinput} />
           </View>
 
           <View style={{ marginBottom: 15 }}>
@@ -131,17 +182,17 @@ class FormInputDataUangKeluar extends Component{
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Uraian</Text>
-            <TextInput onChangeText={(w)=> this.setState({uraian_keluar:w})} placeholder = 'Masukkan uraian' placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput onChangeText={(w)=> this.setState({uraian_keluar:w})} placeholder = 'Masukkan uraian' value={this.state.uraian_keluar} placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
           <View style = {{marginBottom: 15}}>
             <Text style = {styles.txtlabel}>Jumlah (Rp)</Text>
-            <TextInput onChangeText={(w)=> this.setState({jumlah_keluar:w})} placeholder = 'Masukkan jumlah uang' keyboardType = 'numeric'  placeholderTextColor = "grey" style = {styles.txtinput} />
+            <TextInput value={this.state.jumlah_keluar} onChangeText={(w)=> this.setState({jumlah_keluar:w})} placeholder = 'Masukkan jumlah uang' keyboardType = 'numeric'  placeholderTextColor = "grey" style = {styles.txtinput} />
           </View>
 
-          <TouchableOpacity onPress={()=>simpan()} activeOpacity = {0.8} style = {{alignItems: 'center', marginTop: 20}}>
-            <Text style = {styles.button}>Simpan</Text>
-          </TouchableOpacity>
+          <TouchableOpacity onPress={this.state.editmode?()=>simpanupdate():()=>simpan()} activeOpacity={0.8} style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={styles.button}>{this.state.editmode?'Ubah Data':'Simpan'}</Text>
+            </TouchableOpacity>
           <Data/>
 
         </ScrollView>
