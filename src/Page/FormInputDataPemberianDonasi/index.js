@@ -238,7 +238,7 @@ class FormInputDataPemberianDonasi extends Component {
               <Text style={styles.txtlabel}>Penerima Donasi</Text>
               <View style={{ marginBottom: 15 }}>
                 {
-                  <SelectInputNative lable="Pilih Pemateri" lebar={'100%'} selectedValue={this.state.id_penerima} onSelectData={(e) => pilihPenerima(e)} data={this.state.penerima} />
+                  <SelectInputNative lable="Pilih Nama Penerima" lebar={'100%'} selectedValue={this.state.id_penerima} onSelectData={(e) => pilihPenerima(e)} data={this.state.penerima} />
                 }
               </View>
             </View>
@@ -247,7 +247,7 @@ class FormInputDataPemberianDonasi extends Component {
               <Text style={styles.txtlabel}>Jenis Donasi</Text>
               <View style={{ marginBottom: 15 }}>
                 {
-                  <SelectInputNative lable="Pilih Pemateri" lebar={'100%'} selectedValue={this.state.id_jenispenerima} onSelectData={(e) => pilihJenisDonasi(e)} data={this.state.jenis} />
+                  <SelectInputNative lable="Pilih Jenis Kategori" lebar={'100%'} selectedValue={this.state.id_jenispenerima} onSelectData={(e) => pilihJenisDonasi(e)} data={this.state.jenis} />
                 }
               </View>
             </View>

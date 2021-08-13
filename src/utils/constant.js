@@ -6,7 +6,11 @@ export const WARNA_TEKS = '#292929';
 export const WARNA_SEKUNDER = '#CBFFB2';
 export const TEKS_SIZE = RFPercentage(1.5); ``
 export const TEKS_SIZE_TITTLE = (TEKS_SIZE * 2) * (0.9);
-export const USTADZ_ICON="https://qurancall.id/images/pengajar_icon.png";
+export const USTADZ_ICON = "https://qurancall.id/images/pengajar_icon.png";
+
 export function currencyFormat(num) {
-    return 'Rp. ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
-  }
+  return 'Rp. ' + num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.')
+}
+export function LAPORANURL(num) {
+  return 'https://lorus.gunungmas-seluler.com/backendmujahiddinapp/laporan/' + num + '.php';
+}

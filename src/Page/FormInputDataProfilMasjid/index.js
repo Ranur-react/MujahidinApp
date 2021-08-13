@@ -26,7 +26,7 @@ class FormInputDataProfilMasjid extends Component {
       if (a.status) {
         showToastWithGravityAndOffset("Request User succes");
         this.setState({ datauser: a.data })
-        console.log(a);
+        // console.log(a);
       } else {
         showToastWithGravityAndOffset(a.toString());
       }
@@ -45,7 +45,8 @@ class FormInputDataProfilMasjid extends Component {
         this.setState({ bank_rekening: a.data[0].bank_rekening })
         this.setState({ id_penanggungjwb: a.data[0].id_penanggungjwb })
 
-        console.log(a);
+        console.log("------------");
+        console.log(a.data[0]);
       } else {
         showToastWithGravityAndOffset(a);
       }

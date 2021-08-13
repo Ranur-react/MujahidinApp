@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
-import {WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView,Linking} from 'react-native';
+import {WARNA_UTAMA, WARNA_DISABLE, LAPORANURL,WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {IconBack, IconData, IconLaporanV2} from '../../assets'
 
 class LaporanPage extends Component{
@@ -21,37 +21,37 @@ class LaporanPage extends Component{
 
         <View style = {styles.konten}>
         <ScrollView style = {{marginTop: 10}}>
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanKegiatanMasjid'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Kegiatan Masjid</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanDataDonatur'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Donatur</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanDataUangMasukDonasi'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Uang Masuk Donasi</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanDataInfakKotakAmalMasjid'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Infak Kotak Amal</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanDataPenerimaDonasi'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Penerima Donasi</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLAPORANUANGKASKESELURUHAN'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Total Keseluruhan</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style = {styles.card} activeOpacity = {0.7}>
+          <TouchableOpacity onPress={()=>Linking.openURL(LAPORANURL('ExportLaporanDataUangKeluarLainnya'))} style = {styles.card} activeOpacity = {0.7}>
             <IconLaporanV2 />
             <Text style = {styles.text}>Lap. Uang Keluar Lainnya</Text>
           </TouchableOpacity>

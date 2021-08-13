@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput } from 'react-native';
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_SEKUNDER, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
-import { API_user, API_DATAUSER,API_DATALEVEL,API_USERDELETE } from '../../utils/api';
+import { API_user, API_DATAUSER,API_DATALEVEL,API_USERDELETE,API_UPDATEDATAUSER } from '../../utils/api';
 import { IconBack, IconData } from '../../assets';
 import { showToastWithGravityAndOffset } from '../../components/_Toasview';
 import DataView from '../../components/_dataView';
@@ -56,6 +56,20 @@ class FormInputDataUser extends Component {
     const pilih= (e) => {
       console.log(e);
       this.setState({ level_user: e })
+    }
+    const simpanupdate = () => {
+      var POST = async () => {
+        var resp = await API_UPDATEDATAUSER(this.state);
+        console.log(resp);
+        if (resp.status) {
+          // showToastWithGravityAndOffset(resp.pesan);
+          this.LoadData();
+          reset();
+        }else{
+          showToastWithGravityAndOffset(resp.pesan);
+        }
+      }
+      POST()
     }
     const simpan = () => {
       var POST = async () => {

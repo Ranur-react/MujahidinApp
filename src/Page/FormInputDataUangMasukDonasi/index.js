@@ -203,7 +203,7 @@ class FormInputDataUangMasukDonasi extends Component {
               }
               <View>
                 {
-                  <SelectInputNative lable="Pilih Jenis Kegiatan" lebar={'100%'} selectedValue={this.state.iddon_donmasuk} onSelectData={(e) => piliDonator(e)} data={this.state.donatur} />
+                  <SelectInputNative lable="Pilih Nama Donatur" lebar={'100%'} selectedValue={this.state.iddon_donmasuk} onSelectData={(e) => piliDonator(e)} data={this.state.donatur} />
 
                 }
               </View>
