@@ -3,11 +3,45 @@ import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import {WARNA_UTAMA, WARNA_TEKS, WARNA_DISABLE, TEKS_SIZE, TEKS_SIZE_TITTLE} from '../../utils/constant'
 import {LogoMasjid, UserImage} from '../../assets'
 import {ItemUser} from '../../components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 class UserPage extends Component{
   constructor(props){
     super(props);
+    this.state = {
+     
+  }
+}
+  LoadData = () => {
+    const getSessionsLogin = async (i) => {
+      try {
+        const jsonValue = await AsyncStorage.getItem(i);
+        const data = JSON.parse(jsonValue);
+        this.setState({ login: data });
+        if(!this.state.login){
+          // this.props.navigation.replace('Login')
+        }else{
+          if (!this.state.login.status) {
+            console.log("------RESPOND  No Login------");
+            // this.props.navigation.replace('Login')
+          }else{
+            console.log("------RESPOND Succes------");
+            console.log(this.state.login)
+            // console.log("------Nama Users ------")
+            // this.setState({nama:this.state.login.data.nama})
+            // console.log(this.state.login.data.nama)
+            // this.setState({reload:false })
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    getSessionsLogin('db_login');
+  }
+  UNSAFE_componentWillMount() {
+    this.LoadData();
   }
 
   login=()=>{
@@ -28,7 +62,7 @@ class UserPage extends Component{
         <View style = {styles.konten}>
           <View style = {{flex: 1,alignItems: 'center'}}>
             <Image source = {UserImage} style = {styles.userimage} />
-            <Text style = {styles.username}>Ade Zevimarino</Text>
+            <Text style = {styles.username}>{!this.state.login?'User':this.state.login.data[0].nama_user}</Text>
             <Text style = {styles.hakakses}>Administrator</Text>
           </View>
           <TouchableOpacity activeOpacity = {0.5} style = {styles.buttonview} onPress = {this.login}>

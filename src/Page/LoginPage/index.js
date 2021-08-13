@@ -3,6 +3,10 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-nativ
 import { WARNA_UTAMA, WARNA_DISABLE, WARNA_TEKS, TEKS_SIZE, TEKS_SIZE_TITTLE } from '../../utils/constant'
 import { LogoMasjidGreen } from '../../assets'
 import { TeksEror } from '../../components/_FormValidasi';
+import {API_LOGIN} from '../../utils/api';
+import { showToastWithGravityAndOffset } from '../../components/_Toasview';
+import { Asyn_Safe } from '../../utils/bankdata';
+
 class LoginPage extends Component {
   constructor(props) {
     super(props);
@@ -16,6 +20,20 @@ class LoginPage extends Component {
   }
 
   render() {
+    const simpan = () => {
+      var POST = async () => {
+        var resp = await API_LOGIN(this.state);
+        this.setState({
+          respond:resp.pesan.erorr
+        })
+        console.log(resp.pesan.erorr);
+        if (resp.status) {
+          await Asyn_Safe('db_login', resp)
+          showToastWithGravityAndOffset("Login Berhasil");
+        }
+      }
+      POST()
+    }
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -28,25 +46,25 @@ class LoginPage extends Component {
             <Text style={styles.txtjudul}>Silahkan login</Text>
             <View style={{ marginTop: 20 }}>
               <Text style={styles.txtinput}>Username</Text>
-              <TextInput placeholder='Masukkan username anda' style={styles.forminput} />
+              <TextInput onChangeText={(w) => this.setState({ email: w })}  placeholder='Masukkan username anda' style={styles.forminput} />
             </View>
             <View>
               {
-                <TeksEror key="991" teks={!this.state.respond || this.state.respond.status ? "" : this.state.respond.error.email} />
+                <TeksEror key="991" teks={!this.state.respond  ? "" : this.state.respond.username} />
               }
             </View>
 
             <View style={{ marginTop: 20 }}>
               <Text style={styles.txtinput}>Password</Text>
-              <TextInput placeholder='Masukkan password anda' style={styles.forminput} secureTextEntry={this.state.secureTextEntry} />
+              <TextInput onChangeText={(w) => this.setState({ paswd: w })} placeholder='Masukkan password anda' style={styles.forminput} secureTextEntry={this.state.secureTextEntry} />
             </View>
             <View>
               {
-                <TeksEror key="992" teks={!this.state.respond || this.state.respond.status ? "" : this.state.respond.error.password} />
+                <TeksEror key="992" teks={!this.state.respond  ? "" : this.state.respond.password} />
               }
             </View>
 
-            <TouchableOpacity style={styles.button} activeOpacity={0.7}>
+            <TouchableOpacity onPress={()=>simpan()} style={styles.button} activeOpacity={0.7}>
               <Text style={styles.txtbutton}>Login</Text>
             </TouchableOpacity>
           </View>

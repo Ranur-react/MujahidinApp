@@ -1138,3 +1138,26 @@ export const API_KEGIATANMASJIDINSERT = async (res) => {
   dataReturn = respond;
   return dataReturn;
 }
+export const API_LOGIN = async (res) => {
+  var e = res;
+  let dataReturn;
+  let formdata = new FormData();
+
+  formdata.append("username", e.email)
+  formdata.append("password", e.paswd)
+  // showToastWithGravityAndOffset("Search from : " + BASE_URL)
+  let respond = await fetch(BASE_URL + "backendmujahiddinapp/login/", {
+    method: "POST",
+    headers: { 'Content-Type': "multipart/form-data" },
+    body: formdata,
+  }).then(response => response.json()).then(responseJson => {
+    console.log(responseJson);
+    return responseJson
+  }).catch(error => {
+    console.log(error);
+    return error
+  });
+
+  dataReturn = respond;
+  return dataReturn;
+}
